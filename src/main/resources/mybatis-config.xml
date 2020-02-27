@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--  <properties resource="test.properties">-->
+<!--    <property name="hello" value="world"/>-->
+<!--    <property name="k" value="v"/>-->
+<!--  </properties>-->
+
+  <settings>
+    <!--    缓存,默认开启-->
+    <setting name="cacheEnabled" value="true"/>
+    <!--全局启用或禁用延迟加载。当禁用时, 所有关联对象都会即时加载 懒加载,默认关闭-->
+    <setting name="lazyLoadingEnabled" value="true"/>
+    <!--    允许或不允许多种结果集从一个单独的语句中返回-->
+    <setting name="multipleResultSetsEnabled" value="true"/>
+    <setting name="useColumnLabel" value="true"/>
+    <setting name="useGeneratedKeys" value="false"/>
+    <setting name="autoMappingBehavior" value="PARTIAL"/>
+    <setting name="defaultExecutorType" value="SIMPLE"/>
+    <!--    查询超时-->
+    <setting name="defaultStatementTimeout" value="25"/>
+    <setting name="safeRowBoundsEnabled" value="false"/>
+    <setting name="mapUnderscoreToCamelCase" value="false"/>
+    <setting name="localCacheScope" value="SESSION"/>
+    <setting name="jdbcTypeForNull" value="OTHER"/>
+    <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+
+
+    <setting name="logImpl" value="LOG4J"/>
+  </settings>
+
+
+<!--  <typeAliases>-->
+<!--    &lt;!&ndash;    <package name="com.huifer.mybatis.entity"/>&ndash;&gt;-->
+<!--    <typeAlias type="com.huifer.mybatis.entity.Person" alias="Person"/>-->
+<!--  </typeAliases>-->
+
+<!--  <typeHandlers>-->
+<!--    &lt;!&ndash;      <package name="com.huifer.mybatis.handler"/>&ndash;&gt;-->
+<!--    <typeHandler jdbcType="VARCHAR" javaType="String" handler="com.huifer.mybatis.handler.TestTypeHandler"/>-->
+<!--  </typeHandlers>-->
+<!--  <objectFactory type="com.huifer.mybatis.factory.TestObjectFactory">-->
+<!--    <property name="data" value="100"/>-->
+<!--  </objectFactory>-->
+
+<!--  <objectWrapperFactory type="org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory"/>-->
+<!--  <reflectorFactory type="org.apache.ibatis.reflection.DefaultReflectorFactory"/>-->
+<!--  <plugins>-->
+<!--    <plugin interceptor="com.huifer.mybatis.plugins.TestPlugin">-->
+<!--      <property name="testPlugins" value="tPl"/>-->
+<!--    </plugin>-->
+<!--  </plugins>-->
+  <!-- 定义数据库的信息，默认使用development数据库构建环境 -->
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useSSL=false"/>
+        <property name="username" value="mybatis"/>
+        <property name="password" value="mybatis"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <databaseIdProvider type="DB_VENDOR">
+    <property name="Oracle" value="oracle"/>
+    <property name="MySQL" value="mysql"/>
+    <property name="DB2" value="d2"/>
+  </databaseIdProvider>
+  <!-- 定义映射器 -->
+  <mappers>
+    <mapper resource="com/sourcehot/ibatis/mapper/HsSellMapper.xml"/>
+  </mappers>
+</configuration>

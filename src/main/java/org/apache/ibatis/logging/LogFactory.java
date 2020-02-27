@@ -1,23 +1,29 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2016 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.logging;
 
 import java.lang.reflect.Constructor;
 
 /**
+ * <p>日志工厂，实现内容:</p>
+ * <ol>
+ *     <li>org.slf4j.Logger 日志框架 slf4j</li>
+ *     <li>org.apache.commons.logging.Log 日志框架 apache</li>
+ *     <li>org.apache.logging.log4j.Logger 日志框架 log4j2</li>
+ *     <li>org.apache.log4j.Logger 日志框架 log4j </li>
+ *     <li>java.util.logging.Logger 日志框架,JDK的logger</li>
+ * </ol>
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
@@ -30,37 +36,46 @@ public final class LogFactory {
 
   private static Constructor<? extends Log> logConstructor;
 
+  /**
+   * 日志的实现类的具体选择
+   */
   static {
+    // slf4j 日志
     tryImplementation(new Runnable() {
       @Override
       public void run() {
         useSlf4jLogging();
       }
     });
+    // apache 日志
     tryImplementation(new Runnable() {
       @Override
       public void run() {
         useCommonsLogging();
       }
     });
+    // log4j2 日志
     tryImplementation(new Runnable() {
       @Override
       public void run() {
         useLog4J2Logging();
       }
     });
+    // log4 日志
     tryImplementation(new Runnable() {
       @Override
       public void run() {
         useLog4JLogging();
       }
     });
+    // JDK 日志
     tryImplementation(new Runnable() {
       @Override
       public void run() {
         useJdkLogging();
       }
     });
+    // 空 日志
     tryImplementation(new Runnable() {
       @Override
       public void run() {
@@ -80,7 +95,8 @@ public final class LogFactory {
   public static Log getLog(String logger) {
     try {
       return logConstructor.newInstance(logger);
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       throw new LogException("Error creating logger for logger " + logger + ".  Cause: " + t, t);
     }
   }
@@ -117,16 +133,25 @@ public final class LogFactory {
     setImplementation(org.apache.ibatis.logging.nologging.NoLoggingImpl.class);
   }
 
+  /**
+   * 选择具体的日志实现
+   */
   private static void tryImplementation(Runnable runnable) {
     if (logConstructor == null) {
       try {
         runnable.run();
-      } catch (Throwable t) {
+      }
+      catch (Throwable t) {
         // ignore
       }
     }
   }
 
+  /**
+   * 选择具体的日志实现
+   *
+   * @param implClass
+   */
   private static void setImplementation(Class<? extends Log> implClass) {
     try {
       Constructor<? extends Log> candidate = implClass.getConstructor(String.class);
@@ -135,7 +160,8 @@ public final class LogFactory {
         log.debug("Logging initialized using '" + implClass + "' adapter.");
       }
       logConstructor = candidate;
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       throw new LogException("Error setting Log implementation.  Cause: " + t, t);
     }
   }

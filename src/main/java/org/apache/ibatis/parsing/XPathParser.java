@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.parsing;
 
@@ -40,14 +37,19 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * 将xml文件转换成{@link Document} , 核心方法 org.apache.ibatis.parsing.XPathParser#createDocument(org.xml.sax.InputSource)
  * @author Clinton Begin
  */
 public class XPathParser {
 
   private final Document document;
+
   private boolean validation;
+
   private EntityResolver entityResolver;
+
   private Properties variables;
+
   private XPath xpath;
 
   public XPathParser(String xml) {
@@ -196,6 +198,12 @@ public class XPathParser {
     return evalNodes(document, expression);
   }
 
+  /**
+   * 获取 一定规则的节点
+   * @param root
+   * @param expression
+   * @return
+   */
   public List<XNode> evalNodes(Object root, String expression) {
     List<XNode> xnodes = new ArrayList<XNode>();
     NodeList nodes = (NodeList) evaluate(expression, root, XPathConstants.NODESET);
@@ -205,6 +213,11 @@ public class XPathParser {
     return xnodes;
   }
 
+  /**
+   * 加载指定标签名下的内容
+   * @param expression
+   * @return
+   */
   public XNode evalNode(String expression) {
     return evalNode(document, expression);
   }
@@ -220,21 +233,32 @@ public class XPathParser {
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new BuilderException("Error evaluating XPath.  Cause: " + e, e);
     }
   }
 
+  /**
+   * 创建xml文档
+   * @param inputSource xml文件流
+   * @return
+   */
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
+      // XML解析器
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setValidating(validation);
-
+      // 设置命名空间
       factory.setNamespaceAware(false);
+      // 设置注解忽略
       factory.setIgnoringComments(true);
+      // 设置空白
       factory.setIgnoringElementContentWhitespace(false);
+      // 设置 CDATA 转换
       factory.setCoalescing(false);
+      // 设置拓展
       factory.setExpandEntityReferences(true);
 
       DocumentBuilder builder = factory.newDocumentBuilder();
@@ -254,8 +278,10 @@ public class XPathParser {
         public void warning(SAXParseException exception) throws SAXException {
         }
       });
+      // w3c 包里面的解析函数
       return builder.parse(inputSource);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }
   }

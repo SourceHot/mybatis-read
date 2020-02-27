@@ -26,6 +26,13 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * 查询结果对象
+ * resultMap -> result 标签
+ * <resultMap id="base" type="com.huifer.mybatis.entity.Person">
+ * <id column="ID" jdbcType="VARCHAR" property="id"/>
+ * <result column="age" jdbcType="INTEGER" property="age"/>
+ * </resultMap>
+ *
  * @author Clinton Begin
  */
 public class ResultMapping {

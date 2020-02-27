@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.reflection;
 
@@ -32,10 +29,30 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
  */
 public class MetaObject {
 
+
+  /**
+   * 原始的数据对象,初始化时的对象
+   */
   private final Object originalObject;
+
+  /**
+   * 对象包装
+   */
   private final ObjectWrapper objectWrapper;
+
+  /**
+   * 对象工厂
+   */
   private final ObjectFactory objectFactory;
+
+  /**
+   * object包装工程
+   */
   private final ObjectWrapperFactory objectWrapperFactory;
+
+  /**
+   * 反射工厂
+   */
   private final ReflectorFactory reflectorFactory;
 
   private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
@@ -44,15 +61,20 @@ public class MetaObject {
     this.objectWrapperFactory = objectWrapperFactory;
     this.reflectorFactory = reflectorFactory;
 
+    // 根据object不同实例进行不同的实例化方式
     if (object instanceof ObjectWrapper) {
       this.objectWrapper = (ObjectWrapper) object;
-    } else if (objectWrapperFactory.hasWrapperFor(object)) {
+    }
+    else if (objectWrapperFactory.hasWrapperFor(object)) {
       this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);
-    } else if (object instanceof Map) {
+    }
+    else if (object instanceof Map) {
       this.objectWrapper = new MapWrapper(this, (Map) object);
-    } else if (object instanceof Collection) {
+    }
+    else if (object instanceof Collection) {
       this.objectWrapper = new CollectionWrapper(this, (Collection) object);
-    } else {
+    }
+    else {
       this.objectWrapper = new BeanWrapper(this, object);
     }
   }
@@ -60,7 +82,8 @@ public class MetaObject {
   public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
       return SystemMetaObject.NULL_META_OBJECT;
-    } else {
+    }
+    else {
       return new MetaObject(object, objectFactory, objectWrapperFactory, reflectorFactory);
     }
   }
@@ -74,7 +97,7 @@ public class MetaObject {
   }
 
   public ReflectorFactory getReflectorFactory() {
-	return reflectorFactory;
+    return reflectorFactory;
   }
 
   public Object getOriginalObject() {
@@ -109,34 +132,53 @@ public class MetaObject {
     return objectWrapper.hasGetter(name);
   }
 
+  /**
+   * 获取value
+   *
+   * @param name 属性值名称
+   * @return
+   */
   public Object getValue(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
+      // 判断是否是空的metaObject
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return null;
-      } else {
+      }
+      else {
         return metaValue.getValue(prop.getChildren());
       }
-    } else {
+    }
+    else {
       return objectWrapper.get(prop);
     }
   }
 
+  /**
+   * metaObject 设置属性值方法
+   *
+   * @param name
+   * @param value
+   */
   public void setValue(String name, Object value) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
+      // 获取属性实例
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         if (value == null && prop.getChildren() != null) {
           // don't instantiate child path if value is null
           return;
-        } else {
+        }
+        else {
+          // 创建属性值
           metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
         }
       }
       metaValue.setValue(prop.getChildren(), value);
-    } else {
+    }
+    else {
       objectWrapper.set(prop, value);
     }
   }

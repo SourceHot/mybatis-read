@@ -19,10 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 语言驱动注册中心
  * @author Frank D. Martinez [mnesarco]
  */
 public class LanguageDriverRegistry {
 
+  /**
+   * 语言驱动注册中心
+   */
   private final Map<Class<?>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<Class<?>, LanguageDriver>();
 
   private Class<?> defaultDriverClass;
@@ -49,7 +53,7 @@ public class LanguageDriverRegistry {
       LANGUAGE_DRIVER_MAP.put(cls, instance);
     }
   }
-  
+
   public LanguageDriver getDriver(Class<?> cls) {
     return LANGUAGE_DRIVER_MAP.get(cls);
   }

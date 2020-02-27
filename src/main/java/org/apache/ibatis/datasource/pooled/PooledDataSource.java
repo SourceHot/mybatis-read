@@ -43,9 +43,13 @@ public class PooledDataSource implements DataSource {
 
   private final PoolState state = new PoolState(this);
 
-  private final UnpooledDataSource dataSource;
+  /**
+   * 链接地址 用户名 密码 在这里面
+   */ private final UnpooledDataSource dataSource;
 
-  // OPTIONAL CONFIGURATION FIELDS
+  /**
+   * 一些默认连接参数
+   */// OPTIONAL CONFIGURATION FIELDS
   protected int poolMaximumActiveConnections = 10;
   protected int poolMaximumIdleConnections = 5;
   protected int poolMaximumCheckoutTime = 20000;

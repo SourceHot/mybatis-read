@@ -23,6 +23,8 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * CollectionWrapper 是{@link Collection} 的封装方法
+
  * @author Clinton Begin
  */
 public class CollectionWrapper implements ObjectWrapper {
@@ -83,6 +85,10 @@ public class CollectionWrapper implements ObjectWrapper {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * 是否是list
+   * @return
+   */
   @Override
   public boolean isCollection() {
     return true;

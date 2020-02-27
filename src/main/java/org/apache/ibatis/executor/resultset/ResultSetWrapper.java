@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.executor.resultset;
 
@@ -26,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
@@ -41,12 +39,27 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 public class ResultSetWrapper {
 
   private final ResultSet resultSet;
+
   private final TypeHandlerRegistry typeHandlerRegistry;
-  private final List<String> columnNames = new ArrayList<String>();
-  private final List<String> classNames = new ArrayList<String>();
-  private final List<JdbcType> jdbcTypes = new ArrayList<JdbcType>();
+
+  /**
+   * 字段名称
+   */ private final List<String> columnNames = new ArrayList<String>();
+
+  /**
+   * 字段类型
+   */ private final List<String> classNames = new ArrayList<String>();
+
+  /**
+   * jdbc 数据类型
+   */ private final List<JdbcType> jdbcTypes = new ArrayList<JdbcType>();
+
   private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<String, Map<Class<?>, TypeHandler<?>>>();
-  private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
+
+  /**
+   * sql 查询结果
+   */ private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<String, List<String>>();
+
   private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<String, List<String>>();
 
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
@@ -75,7 +88,7 @@ public class ResultSetWrapper {
   }
 
   public JdbcType getJdbcType(String columnName) {
-    for (int i = 0 ; i < columnNames.size(); i++) {
+    for (int i = 0; i < columnNames.size(); i++) {
       if (columnNames.get(i).equalsIgnoreCase(columnName)) {
         return jdbcTypes.get(i);
       }
@@ -87,7 +100,7 @@ public class ResultSetWrapper {
    * Gets the type handler to use when reading the result set.
    * Tries to get from the TypeHandlerRegistry by searching for the property type.
    * If not found it gets the column JDBC type and tries to get a handler for it.
-   * 
+   *
    * @param propertyType
    * @param columnName
    * @return
@@ -98,7 +111,8 @@ public class ResultSetWrapper {
     if (columnHandlers == null) {
       columnHandlers = new HashMap<Class<?>, TypeHandler<?>>();
       typeHandlerMap.put(columnName, columnHandlers);
-    } else {
+    }
+    else {
       handler = columnHandlers.get(propertyType);
     }
     if (handler == null) {
@@ -111,9 +125,11 @@ public class ResultSetWrapper {
         final Class<?> javaType = resolveClass(classNames.get(index));
         if (javaType != null && jdbcType != null) {
           handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);
-        } else if (javaType != null) {
+        }
+        else if (javaType != null) {
           handler = typeHandlerRegistry.getTypeHandler(javaType);
-        } else if (jdbcType != null) {
+        }
+        else if (jdbcType != null) {
           handler = typeHandlerRegistry.getTypeHandler(jdbcType);
         }
       }
@@ -131,12 +147,19 @@ public class ResultSetWrapper {
       if (className != null) {
         return Resources.classForName(className);
       }
-    } catch (ClassNotFoundException e) {
+    }
+    catch (ClassNotFoundException e) {
       // ignore
     }
     return null;
   }
 
+  /**
+   * 获取所有列名
+   * @param resultMap
+   * @param columnPrefix
+   * @throws SQLException
+   */
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
     List<String> mappedColumnNames = new ArrayList<String>();
     List<String> unmappedColumnNames = new ArrayList<String>();
@@ -146,7 +169,8 @@ public class ResultSetWrapper {
       final String upperColumnName = columnName.toUpperCase(Locale.ENGLISH);
       if (mappedColumns.contains(upperColumnName)) {
         mappedColumnNames.add(upperColumnName);
-      } else {
+      }
+      else {
         unmappedColumnNames.add(columnName);
       }
     }
@@ -186,5 +210,5 @@ public class ResultSetWrapper {
     }
     return prefixed;
   }
-  
+
 }

@@ -34,6 +34,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ * 可重用执行器, 对比{@link SimpleExecutor} Statement 做了缓存,statementMap
+
  * @author Clinton Begin
  */
 public class ReuseExecutor extends BaseExecutor {

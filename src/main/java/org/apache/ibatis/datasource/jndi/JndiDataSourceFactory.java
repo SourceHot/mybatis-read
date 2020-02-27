@@ -35,8 +35,14 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   public static final String DATA_SOURCE = "data_source";
   public static final String ENV_PREFIX = "env.";
 
-  private DataSource dataSource;
+  /**
+   * 直接 java 数据源
+   */ private DataSource dataSource;
 
+  /**
+   *      * 设置数据源属性
+   * @param properties
+   */
   @Override
   public void setProperties(Properties properties) {
     try {
@@ -50,6 +56,7 @@ public class JndiDataSourceFactory implements DataSourceFactory {
 
       if (properties.containsKey(INITIAL_CONTEXT)
           && properties.containsKey(DATA_SOURCE)) {
+        // 如果包含`initial_context`和`data_source`
         Context ctx = (Context) initCtx.lookup(properties.getProperty(INITIAL_CONTEXT));
         dataSource = (DataSource) ctx.lookup(properties.getProperty(DATA_SOURCE));
       } else if (properties.containsKey(DATA_SOURCE)) {
@@ -66,16 +73,22 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
-  private static Properties getEnvProperties(Properties allProps) {
+  /**
+   * 获取数据源的配置信息
+   * @param allProps
+   * @return
+   */ private static Properties getEnvProperties(Properties allProps) {
     final String PREFIX = ENV_PREFIX;
     Properties contextProperties = null;
     for (Entry<Object, Object> entry : allProps.entrySet()) {
       String key = (String) entry.getKey();
       String value = (String) entry.getValue();
+      // 只获取前缀`env`
       if (key.startsWith(PREFIX)) {
         if (contextProperties == null) {
           contextProperties = new Properties();
         }
+        // 放入数据
         contextProperties.put(key.substring(PREFIX.length()), value);
       }
     }

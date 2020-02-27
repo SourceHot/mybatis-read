@@ -57,12 +57,16 @@ public class CacheKey implements Cloneable, Serializable {
   }
 
   public void update(Object object) {
-    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object); 
+    // 求 输入参数的hash
+    int baseHashCode = object == null ? 1 : ArrayUtil.hashCode(object);
 
+    // 自增
     count++;
+    // 校验和
     checksum += baseHashCode;
+    // 更新 hash
     baseHashCode *= count;
-
+    // hash = 乘数 * hashcode + 新的hashcode
     hashcode = multiplier * hashcode + baseHashCode;
 
     updateList.add(object);
@@ -77,18 +81,22 @@ public class CacheKey implements Cloneable, Serializable {
   @Override
   public boolean equals(Object object) {
     if (this == object) {
+      // 等于自生
       return true;
     }
     if (!(object instanceof CacheKey)) {
       return false;
     }
 
+    // 类型转换
     final CacheKey cacheKey = (CacheKey) object;
 
     if (hashcode != cacheKey.hashcode) {
+      // 当前的hashcode 和 输入的hashcode 比较
       return false;
     }
     if (checksum != cacheKey.checksum) {
+      // 当前的校验和 与输入的校验和比较
       return false;
     }
     if (count != cacheKey.count) {

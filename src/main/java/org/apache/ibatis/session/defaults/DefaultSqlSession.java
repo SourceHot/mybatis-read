@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.session.defaults;
 
@@ -40,7 +37,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- *
+ * mybatis 默认的sqlSession
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.
  *
@@ -49,12 +46,22 @@ import org.apache.ibatis.session.SqlSession;
 public class DefaultSqlSession implements SqlSession {
 
   private final Configuration configuration;
+
   private final Executor executor;
 
   private final boolean autoCommit;
+
   private boolean dirty;
+
   private List<Cursor<?>> cursorList;
 
+  /**
+   * 默认的 sql session
+   *
+   * @param configuration mybatis-config.xml
+   * @param executor {@link Executor}
+   * @param autoCommit 自动commit
+   */
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
     this.configuration = configuration;
     this.executor = executor;
@@ -68,18 +75,28 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <T> T selectOne(String statement) {
-    return this.<T>selectOne(statement, null);
+    return this.selectOne(statement, null);
   }
 
+  /**
+   * 执行 selectList().get(0)
+   *
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @param <T>
+   * @return
+   */
   @Override
   public <T> T selectOne(String statement, Object parameter) {
     // Popular vote was to return null on 0 results and throw exception on too many.
-    List<T> list = this.<T>selectList(statement, parameter);
+    List<T> list = this.selectList(statement, parameter);
     if (list.size() == 1) {
       return list.get(0);
-    } else if (list.size() > 1) {
+    }
+    else if (list.size() > 1) {
       throw new TooManyResultsException("Expected one result (or null) to be returned by selectOne(), but found: " + list.size());
-    } else {
+    }
+    else {
       return null;
     }
   }
@@ -124,9 +141,11 @@ public class DefaultSqlSession implements SqlSession {
       Cursor<T> cursor = executor.queryCursor(ms, wrapCollection(parameter), rowBounds);
       registerCursor(cursor);
       return cursor;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -141,14 +160,24 @@ public class DefaultSqlSession implements SqlSession {
     return this.selectList(statement, parameter, RowBounds.DEFAULT);
   }
 
+  /**
+   * 执行query
+   * @param statement Unique identifier matching the statement to use.
+   * @param parameter A parameter object to pass to the statement.
+   * @param rowBounds  Bounds to limit object retrieval
+   * @param <E>
+   * @return
+   */
   @Override
   public <E> List<E> selectList(String statement, Object parameter, RowBounds rowBounds) {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -168,9 +197,11 @@ public class DefaultSqlSession implements SqlSession {
     try {
       MappedStatement ms = configuration.getMappedStatement(statement);
       executor.query(ms, wrapCollection(parameter), rowBounds, handler);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -196,9 +227,11 @@ public class DefaultSqlSession implements SqlSession {
       dirty = true;
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.update(ms, wrapCollection(parameter));
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -223,9 +256,11 @@ public class DefaultSqlSession implements SqlSession {
     try {
       executor.commit(isCommitOrRollbackRequired(force));
       dirty = false;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error committing transaction.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -240,9 +275,11 @@ public class DefaultSqlSession implements SqlSession {
     try {
       executor.rollback(isCommitOrRollbackRequired(force));
       dirty = false;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error rolling back transaction.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -251,9 +288,11 @@ public class DefaultSqlSession implements SqlSession {
   public List<BatchResult> flushStatements() {
     try {
       return executor.flushStatements();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw ExceptionFactory.wrapException("Error flushing statements.  Cause: " + e, e);
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -264,7 +303,8 @@ public class DefaultSqlSession implements SqlSession {
       executor.close(isCommitOrRollbackRequired(false));
       closeCursors();
       dirty = false;
-    } finally {
+    }
+    finally {
       ErrorContext.instance().reset();
     }
   }
@@ -274,7 +314,8 @@ public class DefaultSqlSession implements SqlSession {
       for (Cursor<?> cursor : cursorList) {
         try {
           cursor.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
           throw ExceptionFactory.wrapException("Error closing cursor.  Cause: " + e, e);
         }
       }
@@ -289,14 +330,15 @@ public class DefaultSqlSession implements SqlSession {
 
   @Override
   public <T> T getMapper(Class<T> type) {
-    return configuration.<T>getMapper(type, this);
+    return configuration.getMapper(type, this);
   }
 
   @Override
   public Connection getConnection() {
     try {
       return executor.getTransaction().getConnection();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       throw ExceptionFactory.wrapException("Error getting a new connection.  Cause: " + e, e);
     }
   }
@@ -325,7 +367,8 @@ public class DefaultSqlSession implements SqlSession {
         map.put("list", object);
       }
       return map;
-    } else if (object != null && object.getClass().isArray()) {
+    }
+    else if (object != null && object.getClass().isArray()) {
       StrictMap<Object> map = new StrictMap<Object>();
       map.put("array", object);
       return map;

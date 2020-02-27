@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * 方法的 method
+
  * @author Clinton Begin
  */
 public class MethodInvoker implements Invoker {

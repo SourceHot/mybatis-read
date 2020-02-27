@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * sql 脚本创建工具
+
  * @author Clinton Begin
  * @author Jeff Butler
  * @author Adam Gent
@@ -28,7 +30,13 @@ import java.util.List;
  */
 public abstract class AbstractSQL<T> {
 
+  /**
+   * and 替换文本
+   */
   private static final String AND = ") \nAND (";
+  /**
+   * or 替换文本
+   */
   private static final String OR = ") \nOR (";
 
   private final SQLStatement sql = new SQLStatement();
@@ -305,8 +313,14 @@ public abstract class AbstractSQL<T> {
 
   }
 
+  /**
+   * 各类语句的组装 最后应该是一个sql文
+   */
   private static class SQLStatement {
 
+    /**
+     * CRUD 枚举
+     */
     public enum StatementType {
       DELETE, INSERT, SELECT, UPDATE
     }
@@ -355,6 +369,12 @@ public abstract class AbstractSQL<T> {
       }
     }
 
+    /**
+     * select 组装
+
+     * @param builder
+     * @return
+     */
     private String selectSQL(SafeAppendable builder) {
       if (distinct) {
         sqlClause(builder, "SELECT DISTINCT", select, "", "", ", ");
@@ -371,7 +391,11 @@ public abstract class AbstractSQL<T> {
       return builder.toString();
     }
 
-    private void joins(SafeAppendable builder) {
+
+    /**
+     * join 组装
+     * @param builder
+     */   private void joins(SafeAppendable builder) {
       sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
       sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
       sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
@@ -379,20 +403,32 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "RIGHT OUTER JOIN", rightOuterJoin, "", "", "\nRIGHT OUTER JOIN ");
     }
 
-    private String insertSQL(SafeAppendable builder) {
+    /**
+     * insert 组装
+     * @param builder
+     * @return
+     */  private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
       sqlClause(builder, "VALUES", values, "(", ")", ", ");
       return builder.toString();
     }
 
-    private String deleteSQL(SafeAppendable builder) {
+    /**
+     * delete 组装
+     * @param builder
+     * @return
+     */ private String deleteSQL(SafeAppendable builder) {
       sqlClause(builder, "DELETE FROM", tables, "", "", "");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
       return builder.toString();
     }
 
-    private String updateSQL(SafeAppendable builder) {
+    /**
+     * update 组装
+     * @param builder
+     * @return
+     */  private String updateSQL(SafeAppendable builder) {
       sqlClause(builder, "UPDATE", tables, "", "", "");
       joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
@@ -400,7 +436,11 @@ public abstract class AbstractSQL<T> {
       return builder.toString();
     }
 
-    public String sql(Appendable a) {
+    /**
+     * sql 文本创建方式
+     * @param a
+     * @return
+     */ public String sql(Appendable a) {
       SafeAppendable builder = new SafeAppendable(a);
       if (statementType == null) {
         return null;
@@ -408,20 +448,25 @@ public abstract class AbstractSQL<T> {
 
       String answer;
 
+      // 不同sql类型的sql创建方式
       switch (statementType) {
         case DELETE:
+          // 删除sql
           answer = deleteSQL(builder);
           break;
 
         case INSERT:
+          // 插入sql
           answer = insertSQL(builder);
           break;
 
         case SELECT:
+          // 查询sql
           answer = selectSQL(builder);
           break;
 
         case UPDATE:
+          // 更新sql
           answer = updateSQL(builder);
           break;
 

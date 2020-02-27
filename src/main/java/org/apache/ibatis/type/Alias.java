@@ -22,6 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ *
+ * 在xml中也有同样的标签来进行操作`alias`标签哦
  * @author Clinton Begin
  */
 @Documented

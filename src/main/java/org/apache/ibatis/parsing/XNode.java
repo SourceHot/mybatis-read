@@ -38,7 +38,9 @@ public class XNode {
   private final Properties variables;
   private final XPathParser xpathParser;
 
-  public XNode(XPathParser xpathParser, Node node, Properties variables) {
+  /**
+   * 构造函数 初始化数据
+   */ public XNode(XPathParser xpathParser, Node node, Properties variables) {
     this.xpathParser = xpathParser;
     this.node = node;
     this.name = node.getNodeName();
@@ -50,7 +52,11 @@ public class XNode {
   public XNode newXNode(Node node) {
     return new XNode(xpathParser, node, variables);
   }
-
+  /**
+   * 节点获取,核心是w3c xml 解析node后对解析结果包装成 {@link XNode}
+   *
+   * @return
+   */
   public XNode getParent() {
     Node parent = node.getParentNode();
     if (parent == null || !(parent instanceof Element)) {
@@ -60,7 +66,11 @@ public class XNode {
     }
   }
 
-  public String getPath() {
+  /**
+   * 获取全路径
+   *
+   * @return
+   */public String getPath() {
     StringBuilder builder = new StringBuilder();
     Node current = node;
     while (current != null && current instanceof Element) {
@@ -73,13 +83,18 @@ public class XNode {
     return builder.toString();
   }
 
-  public String getValueBasedIdentifier() {
+  /**
+   * 外部调用,服务于 resultMap 标签
+   *
+   * @return
+   */ public String getValueBasedIdentifier() {
     StringBuilder builder = new StringBuilder();
     XNode current = this;
     while (current != null) {
       if (current != this) {
         builder.insert(0, "_");
       }
+      // 数据获取, 获取顺序id\value\property
       String value = current.getStringAttribute("id",
           current.getStringAttribute("value",
               current.getStringAttribute("property", null)));
@@ -209,10 +224,22 @@ public class XNode {
     }
   }
 
+  /**
+   * 通过标签的name属性获取值
+
+   * @param name
+   * @return
+   */
   public String getStringAttribute(String name) {
     return getStringAttribute(name, null);
   }
 
+  /**
+   * 获取数据 字符串属性
+   * @param name 属性名
+   * @param def 默认值
+   * @return 属性名值
+   */
   public String getStringAttribute(String name, String def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -226,7 +253,13 @@ public class XNode {
     return getBooleanAttribute(name, null);
   }
 
-  public Boolean getBooleanAttribute(String name, Boolean def) {
+  /**
+   * 根据属性名称获取属性值, 没有返回默认值 def
+   *
+   * @param name 属性名称
+   * @param def  默认值
+   * @return 属性名称-> 属性值
+   */  public Boolean getBooleanAttribute(String name, Boolean def) {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
@@ -301,7 +334,11 @@ public class XNode {
     return children;
   }
 
-  public Properties getChildrenAsProperties() {
+  /**
+   * 解析配置文件xml的标签将返回 {name:value}
+   *
+   * @return
+   */  public Properties getChildrenAsProperties() {
     Properties properties = new Properties();
     for (XNode child : getChildren()) {
       String name = child.getStringAttribute("name");
@@ -347,7 +384,12 @@ public class XNode {
     return builder.toString();
   }
 
-  private Properties parseAttributes(Node n) {
+  /**
+   * 构造方法中的函数,解析系欸但中的数据返回一个 Properties 对象
+   *
+   * @param n
+   * @return
+   */ private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();
     if (attributeNodes != null) {

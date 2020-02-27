@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.reflection;
 
@@ -27,11 +24,17 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 源类
+ *
  * @author Clinton Begin
  */
 public class MetaClass {
 
   private final ReflectorFactory reflectorFactory;
+
+  /**
+   * 反射器
+   */
   private final Reflector reflector;
 
   private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
@@ -39,15 +42,34 @@ public class MetaClass {
     this.reflector = reflectorFactory.findForClass(type);
   }
 
+  /**
+   * 根据 type (java.class) 和 反射工厂{@link DefaultReflectorFactory} 创建 {@link MetaClass}
+   *
+   * @param type
+   * @param reflectorFactory
+   * @return
+   */
   public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
     return new MetaClass(type, reflectorFactory);
   }
 
+  /**
+   * 根据属性获取 操作javaType
+   *
+   * @param prop
+   * @return
+   */
   public MetaClass metaClassForProperty(String name) {
     Class<?> propType = reflector.getGetterType(name);
     return MetaClass.forClass(propType, reflectorFactory);
   }
 
+  /**
+   * 根据 name 获取数据类型
+   *
+   * @param name
+   * @return
+   */
   public String findProperty(String name) {
     StringBuilder prop = buildProperty(name, new StringBuilder());
     return prop.length() > 0 ? prop.toString() : null;
@@ -73,7 +95,8 @@ public class MetaClass {
     if (prop.hasNext()) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.getSetterType(prop.getChildren());
-    } else {
+    }
+    else {
       return reflector.getSetterType(prop.getName());
     }
   }
@@ -93,7 +116,14 @@ public class MetaClass {
     return MetaClass.forClass(propType, reflectorFactory);
   }
 
+  /**
+   * 获取数据类型
+   *
+   * @param prop
+   * @return
+   */
   private Class<?> getGetterType(PropertyTokenizer prop) {
+    // 在 Reflector 类中获取
     Class<?> type = reflector.getGetterType(prop.getName());
     if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
       Type returnType = getGenericGetterType(prop.getName());
@@ -103,7 +133,8 @@ public class MetaClass {
           returnType = actualTypeArguments[0];
           if (returnType instanceof Class) {
             type = (Class<?>) returnType;
-          } else if (returnType instanceof ParameterizedType) {
+          }
+          else if (returnType instanceof ParameterizedType) {
             type = (Class<?>) ((ParameterizedType) returnType).getRawType();
           }
         }
@@ -120,14 +151,17 @@ public class MetaClass {
         _method.setAccessible(true);
         Method method = (Method) _method.get(invoker);
         return TypeParameterResolver.resolveReturnType(method, reflector.getType());
-      } else if (invoker instanceof GetFieldInvoker) {
+      }
+      else if (invoker instanceof GetFieldInvoker) {
         Field _field = GetFieldInvoker.class.getDeclaredField("field");
         _field.setAccessible(true);
         Field field = (Field) _field.get(invoker);
         return TypeParameterResolver.resolveFieldType(field, reflector.getType());
       }
-    } catch (NoSuchFieldException e) {
-    } catch (IllegalAccessException e) {
+    }
+    catch (NoSuchFieldException e) {
+    }
+    catch (IllegalAccessException e) {
     }
     return null;
   }
@@ -138,10 +172,12 @@ public class MetaClass {
       if (reflector.hasSetter(prop.getName())) {
         MetaClass metaProp = metaClassForProperty(prop.getName());
         return metaProp.hasSetter(prop.getChildren());
-      } else {
+      }
+      else {
         return false;
       }
-    } else {
+    }
+    else {
       return reflector.hasSetter(prop.getName());
     }
   }
@@ -152,10 +188,12 @@ public class MetaClass {
       if (reflector.hasGetter(prop.getName())) {
         MetaClass metaProp = metaClassForProperty(prop);
         return metaProp.hasGetter(prop.getChildren());
-      } else {
+      }
+      else {
         return false;
       }
-    } else {
+    }
+    else {
       return reflector.hasGetter(prop.getName());
     }
   }
@@ -169,24 +207,35 @@ public class MetaClass {
   }
 
   private StringBuilder buildProperty(String name, StringBuilder builder) {
+    // 获取name的内容 属性解析
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
       String propertyName = reflector.findPropertyName(prop.getName());
       if (propertyName != null) {
         builder.append(propertyName);
         builder.append(".");
+        // 创建下级对象
         MetaClass metaProp = metaClassForProperty(propertyName);
+        // 设置属性
         metaProp.buildProperty(prop.getChildren(), builder);
       }
-    } else {
+    }
+    else {
+      // 查找属性
       String propertyName = reflector.findPropertyName(name);
       if (propertyName != null) {
+        // 属性添加
         builder.append(propertyName);
       }
     }
     return builder;
   }
 
+  /**
+   * 是否存在无参数构造方法
+   *
+   * @return
+   */
   public boolean hasDefaultConstructor() {
     return reflector.hasDefaultConstructor();
   }

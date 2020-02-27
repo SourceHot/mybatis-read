@@ -34,13 +34,20 @@ import org.apache.ibatis.reflection.ParamNameUtil;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * resultMap 标签
+ *   <resultMap id="base" type="com.huifer.mybatis.entity.Person">
+ *     <id column="ID" jdbcType="VARCHAR" property="id"/>
+ *     <result column="age" jdbcType="INTEGER" property="age"/>
+ *   </resultMap>
  * @author Clinton Begin
  */
 public class ResultMap {
   private Configuration configuration;
 
   private String id;
-  private Class<?> type;
+  /***
+   * db 的实体对象
+   */ private Class<?> type;
   private List<ResultMapping> resultMappings;
   private List<ResultMapping> idResultMappings;
   private List<ResultMapping> constructorResultMappings;

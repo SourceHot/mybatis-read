@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.session;
 
@@ -92,45 +89,126 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * mybatis-config.xml 文件的java实体
+ *
  * @author Clinton Begin
  */
 public class Configuration {
 
+  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+
+  protected final InterceptorChain interceptorChain = new InterceptorChain();
+
+  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
+
+  protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
+  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+
+  /**
+   * mapper 标签下的属性
+   */
+  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
+
+  protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
+
+  protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
+
+  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
+
+  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
+
+  protected final Set<String> loadedResources = new HashSet<String>();
+
+  protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
+
+  protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
+
+  protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
+
+  protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
+
+  protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
+
+  /*
+   * A map holds cache-ref relationship. The key is the namespace that
+   * references a cache bound to another namespace and the value is the
+   * namespace which the actual cache is bound to.
+   * mapper.xml 的 cache-ref
+   */
+  protected final Map<String, String> cacheRefMap = new HashMap<String, String>();
+
   protected Environment environment;
 
   protected boolean safeRowBoundsEnabled;
+
   protected boolean safeResultHandlerEnabled = true;
+
   protected boolean mapUnderscoreToCamelCase;
+
   protected boolean aggressiveLazyLoading;
+
   protected boolean multipleResultSetsEnabled = true;
+
   protected boolean useGeneratedKeys;
+
   protected boolean useColumnLabel = true;
+
+  /**
+   * 缓存 默认开启
+   * <setting name="cacheEnabled" value="true"/>
+   */
   protected boolean cacheEnabled = true;
+
   protected boolean callSettersOnNulls;
+
   protected boolean useActualParamName = true;
+
   protected boolean returnInstanceForEmptyRow;
 
   protected String logPrefix;
-  protected Class <? extends Log> logImpl;
-  protected Class <? extends VFS> vfsImpl;
+
+  protected Class<? extends Log> logImpl;
+
+  protected Class<? extends VFS> vfsImpl;
+
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
+
   protected JdbcType jdbcTypeForNull = JdbcType.OTHER;
-  protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList(new String[] { "equals", "clone", "hashCode", "toString" }));
+
+  protected Set<String> lazyLoadTriggerMethods = new HashSet<String>(Arrays.asList("equals", "clone", "hashCode", "toString"));
+
+  /**
+   * 查询超时
+   * <setting name="defaultStatementTimeout" value="100"/>
+   */
   protected Integer defaultStatementTimeout;
+
   protected Integer defaultFetchSize;
+
+  /**
+   * 默认执行器类型
+   */
   protected ExecutorType defaultExecutorType = ExecutorType.SIMPLE;
+
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
+
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
   protected Properties variables = new Properties();
+
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
+
   protected ObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
 
   protected boolean lazyLoadingEnabled = false;
+
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
 
   protected String databaseId;
+
   /**
    * Configuration factory class.
    * Used to create Configuration for loading deserialized unread properties.
@@ -139,57 +217,39 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
-  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
-  protected final InterceptorChain interceptorChain = new InterceptorChain();
-  protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
-  protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
-  protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
-
-  protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>("Mapped Statements collection");
-  protected final Map<String, Cache> caches = new StrictMap<Cache>("Caches collection");
-  protected final Map<String, ResultMap> resultMaps = new StrictMap<ResultMap>("Result Maps collection");
-  protected final Map<String, ParameterMap> parameterMaps = new StrictMap<ParameterMap>("Parameter Maps collection");
-  protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<KeyGenerator>("Key Generators collection");
-
-  protected final Set<String> loadedResources = new HashSet<String>();
-  protected final Map<String, XNode> sqlFragments = new StrictMap<XNode>("XML fragments parsed from previous mappers");
-
-  protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<XMLStatementBuilder>();
-  protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<CacheRefResolver>();
-  protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<ResultMapResolver>();
-  protected final Collection<MethodResolver> incompleteMethods = new LinkedList<MethodResolver>();
-
-  /*
-   * A map holds cache-ref relationship. The key is the namespace that
-   * references a cache bound to another namespace and the value is the
-   * namespace which the actual cache is bound to.
-   */
-  protected final Map<String, String> cacheRefMap = new HashMap<String, String>();
-
   public Configuration(Environment environment) {
     this();
     this.environment = environment;
   }
 
+  /**
+   * 构造器,注册了别名 -> 具体类
+   */
   public Configuration() {
+    // 事务类型
     typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
     typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class);
 
+    // mybatis-config.xml 中的标签dataSource 的属性值
     typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class);
     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class);
     typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class);
 
     typeAliasRegistry.registerAlias("PERPETUAL", PerpetualCache.class);
+    // 4种缓存策略
     typeAliasRegistry.registerAlias("FIFO", FifoCache.class);
     typeAliasRegistry.registerAlias("LRU", LruCache.class);
     typeAliasRegistry.registerAlias("SOFT", SoftCache.class);
     typeAliasRegistry.registerAlias("WEAK", WeakCache.class);
 
+    // mybatis-config.xml 中的一个标签属性
     typeAliasRegistry.registerAlias("DB_VENDOR", VendorDatabaseIdProvider.class);
 
+    // 语言驱动
     typeAliasRegistry.registerAlias("XML", XMLLanguageDriver.class);
     typeAliasRegistry.registerAlias("RAW", RawLanguageDriver.class);
 
+    // 日志实现类
     typeAliasRegistry.registerAlias("SLF4J", Slf4jImpl.class);
     typeAliasRegistry.registerAlias("COMMONS_LOGGING", JakartaCommonsLoggingImpl.class);
     typeAliasRegistry.registerAlias("LOG4J", Log4jImpl.class);
@@ -201,6 +261,9 @@ public class Configuration {
     typeAliasRegistry.registerAlias("CGLIB", CglibProxyFactory.class);
     typeAliasRegistry.registerAlias("JAVASSIST", JavassistProxyFactory.class);
 
+    /**
+     * 默认的 {@link LanguageDriver}
+     */
     languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
     languageRegistry.register(RawLanguageDriver.class);
   }
@@ -303,6 +366,12 @@ public class Configuration {
     loadedResources.add(resource);
   }
 
+  /**
+   * 判断 是否有这个 mapper 在 {@link Configuration#loadedResources}中
+   *
+   * @param resource
+   * @return
+   */
   public boolean isResourceLoaded(String resource) {
     return loadedResources.contains(resource);
   }
@@ -465,6 +534,7 @@ public class Configuration {
   /**
    * Set a default {@link TypeHandler} class for {@link Enum}.
    * A default {@link TypeHandler} is {@link org.apache.ibatis.type.EnumTypeHandler}.
+   *
    * @param typeHandler a type handler class for {@link Enum}
    * @since 3.4.5
    */
@@ -486,11 +556,11 @@ public class Configuration {
   }
 
   public ReflectorFactory getReflectorFactory() {
-	  return reflectorFactory;
+    return reflectorFactory;
   }
 
   public void setReflectorFactory(ReflectorFactory reflectorFactory) {
-	  this.reflectorFactory = reflectorFactory;
+    this.reflectorFactory = reflectorFactory;
   }
 
   public ObjectFactory getObjectFactory() {
@@ -531,7 +601,9 @@ public class Configuration {
     return languageRegistry.getDefaultDriver();
   }
 
-  /** @deprecated Use {@link #getDefaultScriptingLanguageInstance()} */
+  /**
+   * @deprecated Use {@link #getDefaultScriptingLanguageInstance()}
+   */
   @Deprecated
   public LanguageDriver getDefaultScriptingLanuageInstance() {
     return getDefaultScriptingLanguageInstance();
@@ -554,6 +626,17 @@ public class Configuration {
     return resultSetHandler;
   }
 
+  /**
+   * 创建 {@link StatementHandler}
+   *
+   * @param executor 执行器
+   * @param mappedStatement
+   * @param parameterObject
+   * @param rowBounds
+   * @param resultHandler
+   * @param boundSql
+   * @return
+   */
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
@@ -564,17 +647,26 @@ public class Configuration {
     return newExecutor(transaction, defaultExecutorType);
   }
 
+  /**
+   * @param transaction 事物
+   * @param executorType 执行器, 默认: {@link ExecutorType#SIMPLE}
+   * @return
+   */
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     executorType = executorType == null ? ExecutorType.SIMPLE : executorType;
     Executor executor;
+    // 通过枚举进行执行器选择
     if (ExecutorType.BATCH == executorType) {
       executor = new BatchExecutor(this, transaction);
-    } else if (ExecutorType.REUSE == executorType) {
+    }
+    else if (ExecutorType.REUSE == executorType) {
       executor = new ReuseExecutor(this, transaction);
-    } else {
+    }
+    else {
       executor = new SimpleExecutor(this, transaction);
     }
+    // 缓存是否开启
     if (cacheEnabled) {
       executor = new CachingExecutor(executor);
     }
@@ -690,6 +782,11 @@ public class Configuration {
     return incompleteCacheRefs;
   }
 
+  /**
+   * 将 标签  <cache-ref namespace=""/> 制作成Java 类后插入 incompleteCacheRefs
+   *
+   * @param incompleteCacheRef
+   */
   public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
     incompleteCacheRefs.add(incompleteCacheRef);
   }
@@ -760,6 +857,15 @@ public class Configuration {
     return mappedStatements.containsKey(statementName);
   }
 
+  /**
+   * 向 cacheRefMap 插入值
+   * <mapper namespace="com.huifer.mybatis.mapper.PersonMapper">
+   * <p>
+   * <cache-ref namespace="com.huifer.mybatis.mapper.PersonMapper"/>
+   *
+   * @param namespace mapper 的 namespace
+   * @param referencedNamespace cache-ref 的 namespace
+   */
   public void addCacheRef(String namespace, String referencedNamespace) {
     cacheRefMap.put(namespace, referencedNamespace);
   }
@@ -844,6 +950,7 @@ public class Configuration {
   protected static class StrictMap<V> extends HashMap<String, V> {
 
     private static final long serialVersionUID = -4950446264854982944L;
+
     private final String name;
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
@@ -875,7 +982,8 @@ public class Configuration {
         final String shortKey = getShortName(key);
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
-        } else {
+        }
+        else {
           super.put(shortKey, (V) new Ambiguity(shortKey));
         }
       }

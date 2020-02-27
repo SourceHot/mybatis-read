@@ -34,6 +34,12 @@ public abstract class BaseWrapper implements ObjectWrapper {
     this.metaObject = metaObject;
   }
 
+  /**
+   * 处理集合对象
+   * @param prop
+   * @param object
+   * @return
+   */
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
     if ("".equals(prop.getName())) {
       return object;
@@ -42,6 +48,15 @@ public abstract class BaseWrapper implements ObjectWrapper {
     }
   }
 
+  /**
+   * 对象获取,根据index
+   * map.get(index)
+   * 数组 array[index]
+   * list list.get(index)
+   * @param prop
+   * @param collection
+   * @return
+   */
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
     if (collection instanceof Map) {
       return ((Map) collection).get(prop.getIndex());
@@ -73,10 +88,20 @@ public abstract class BaseWrapper implements ObjectWrapper {
     }
   }
 
-  protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
+  /**
+   * 设置属性值 ,List , object[] , char[] boolean byte double float int long short
+   * map -> put(index,value)
+   * list -> list.set(index,value)
+   * array -> array[index] = value
+   * @param prop
+   * @param collection
+   * @param value
+   */  protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
     if (collection instanceof Map) {
+      // map -> index:value
       ((Map) collection).put(prop.getIndex(), value);
     } else {
+      // 数组 -> array[index]=value
       int i = Integer.parseInt(prop.getIndex());
       if (collection instanceof List) {
         ((List) collection).set(i, value);
