@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2015 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.builder;
 
@@ -32,10 +29,27 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  * @author Clinton Begin
  */
 public abstract class BaseBuilder {
+
+  /**
+   * 全局 configuration
+   */
   protected final Configuration configuration;
+
+  /**
+   * 别名注册中心
+   */
   protected final TypeAliasRegistry typeAliasRegistry;
+
+  /**
+   * 类型处理器 注册中心
+   */
   protected final TypeHandlerRegistry typeHandlerRegistry;
 
+  /**
+   * 从全局配置中获取属性
+   *
+   * @param configuration
+   */
   public BaseBuilder(Configuration configuration) {
     this.configuration = configuration;
     this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
@@ -69,7 +83,8 @@ public abstract class BaseBuilder {
     }
     try {
       return JdbcType.valueOf(alias);
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
@@ -80,7 +95,8 @@ public abstract class BaseBuilder {
     }
     try {
       return ResultSetType.valueOf(alias);
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
@@ -91,7 +107,8 @@ public abstract class BaseBuilder {
     }
     try {
       return ParameterMode.valueOf(alias);
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
@@ -103,22 +120,38 @@ public abstract class BaseBuilder {
     }
     try {
       return resolveClass(alias).newInstance();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new BuilderException("Error creating instance. Cause: " + e, e);
     }
   }
 
+  /**
+   * 通过别名查询
+   *
+   * @param alias
+   * @param <T>
+   * @return
+   */
   protected Class<?> resolveClass(String alias) {
     if (alias == null) {
       return null;
     }
     try {
       return resolveAlias(alias);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new BuilderException("Error resolving class. Cause: " + e, e);
     }
   }
 
+  /**
+   * 加载类型处理器
+   *
+   * @param javaType
+   * @param typeHandlerAlias
+   * @return
+   */
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
     if (typeHandlerAlias == null) {
       return null;
@@ -127,8 +160,8 @@ public abstract class BaseBuilder {
     if (type != null && !TypeHandler.class.isAssignableFrom(type)) {
       throw new BuilderException("Type " + type.getName() + " is not a valid TypeHandler because it does not implement TypeHandler interface");
     }
-    @SuppressWarnings( "unchecked" ) // already verified it is a TypeHandler
-    Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
+    @SuppressWarnings("unchecked") // already verified it is a TypeHandler
+        Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
     return resolveTypeHandler(javaType, typeHandlerType);
   }
 
@@ -145,6 +178,13 @@ public abstract class BaseBuilder {
     return handler;
   }
 
+  /**
+   * 别名加载 class
+   *
+   * @param alias
+   * @param <T>
+   * @return
+   */
   protected Class<?> resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }

@@ -14,28 +14,28 @@ import org.apache.ibatis.plugin.Plugin;
 //        )
 //})
 public class TestPlugin implements Interceptor {
-    @Override
-    public Object intercept(Invocation invocation) throws Throwable {
+  @Override
+  public Object intercept(Invocation invocation) throws Throwable {
 
-        return invocation.proceed();
-    }
+    return invocation.proceed();
+  }
 
-    @Override
-    public Object plugin(Object target) {
-        return Plugin.wrap(target, this);
-    }
+  @Override
+  public Object plugin(Object target) {
+    return Plugin.wrap(target, this);
+  }
 
-    @Override
-    public void setProperties(Properties properties) {
-        System.out.println(properties);
-    }
+  @Override
+  public void setProperties(Properties properties) {
+    System.out.println(properties);
+  }
 
-    /**
-     * 为测试this.configuration.getInterceptors()使用
-     *
-     * @return
-     */
-    public String hello() {
-        return "hello-mybatis-plugins";
-    }
+  /**
+   * 为测试this.configuration.getInterceptors()使用
+   *
+   * @return
+   */
+  public String hello() {
+    return "hello-mybatis-plugins";
+  }
 }

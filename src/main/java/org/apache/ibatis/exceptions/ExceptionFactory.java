@@ -16,6 +16,7 @@ import org.apache.ibatis.executor.ErrorContext;
 
 /**
  * 异常工厂
+ *
  * @author Clinton Begin
  */
 public class ExceptionFactory {
@@ -26,6 +27,7 @@ public class ExceptionFactory {
 
   /**
    * 异常
+   *
    * @param message 异常消息
    * @param e 异常
    * @return

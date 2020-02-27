@@ -1006,7 +1006,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
    * @param rowBounds
    * @param parentMapping
    * @throws SQLException
-   */ private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
+   */
+  private void handleRowValuesForNestedResultMap(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler<?> resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     final DefaultResultContext<Object> resultContext = new DefaultResultContext<Object>();
     skipRows(rsw.getResultSet(), rowBounds);
     Object rowValue = previousRowValue;
@@ -1307,6 +1308,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     }
     return null;
   }
+
   /**
    * 类型处理器判断
    *

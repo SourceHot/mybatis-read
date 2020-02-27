@@ -38,6 +38,7 @@ import org.xml.sax.SAXParseException;
 
 /**
  * 将xml文件转换成{@link Document} , 核心方法 org.apache.ibatis.parsing.XPathParser#createDocument(org.xml.sax.InputSource)
+ *
  * @author Clinton Begin
  */
 public class XPathParser {
@@ -200,6 +201,7 @@ public class XPathParser {
 
   /**
    * 获取 一定规则的节点
+   *
    * @param root
    * @param expression
    * @return
@@ -215,6 +217,7 @@ public class XPathParser {
 
   /**
    * 加载指定标签名下的内容
+   *
    * @param expression
    * @return
    */
@@ -241,6 +244,7 @@ public class XPathParser {
 
   /**
    * 创建xml文档
+   *
    * @param inputSource xml文件流
    * @return
    */

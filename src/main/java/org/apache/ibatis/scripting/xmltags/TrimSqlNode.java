@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.scripting.xmltags;
 
@@ -30,10 +27,15 @@ import org.apache.ibatis.session.Configuration;
 public class TrimSqlNode implements SqlNode {
 
   private final SqlNode contents;
+
   private final String prefix;
+
   private final String suffix;
+
   private final List<String> prefixesToOverride;
+
   private final List<String> suffixesToOverride;
+
   private final Configuration configuration;
 
   public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride) {
@@ -49,14 +51,6 @@ public class TrimSqlNode implements SqlNode {
     this.configuration = configuration;
   }
 
-  @Override
-  public boolean apply(DynamicContext context) {
-    FilteredDynamicContext filteredDynamicContext = new FilteredDynamicContext(context);
-    boolean result = contents.apply(filteredDynamicContext);
-    filteredDynamicContext.applyAll();
-    return result;
-  }
-
   private static List<String> parseOverrides(String overrides) {
     if (overrides != null) {
       final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
@@ -69,10 +63,21 @@ public class TrimSqlNode implements SqlNode {
     return Collections.emptyList();
   }
 
+  @Override
+  public boolean apply(DynamicContext context) {
+    FilteredDynamicContext filteredDynamicContext = new FilteredDynamicContext(context);
+    boolean result = contents.apply(filteredDynamicContext);
+    filteredDynamicContext.applyAll();
+    return result;
+  }
+
   private class FilteredDynamicContext extends DynamicContext {
     private DynamicContext delegate;
+
     private boolean prefixApplied;
+
     private boolean suffixApplied;
+
     private StringBuilder sqlBuffer;
 
     public FilteredDynamicContext(DynamicContext delegate) {

@@ -188,6 +188,7 @@ public class UnpooledDataSource implements DataSource {
 
   /**
    * 获取链接对象
+   *
    * @param username
    * @param password
    * @return
@@ -216,6 +217,7 @@ public class UnpooledDataSource implements DataSource {
 
   /**
    * 加载链接驱动 如 mysql 链接驱动
+   *
    * @throws SQLException
    */
   private synchronized void initializeDriver() throws SQLException {
@@ -242,6 +244,7 @@ public class UnpooledDataSource implements DataSource {
 
   /**
    * 设置连接对象 , 超时时间,是否自动提交事物
+   *
    * @param conn
    * @throws SQLException
    */

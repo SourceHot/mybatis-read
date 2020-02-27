@@ -36,6 +36,7 @@ import org.apache.ibatis.type.TypeHandler;
 
 /**
  * 对于 null 不同类型的描述, {key:类型处理器,value:jdbc类型}
+ *
  * @author Clinton Begin
  * @author Adam Gent
  */

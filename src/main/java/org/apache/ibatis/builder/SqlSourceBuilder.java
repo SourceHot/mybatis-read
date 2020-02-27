@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.builder;
 
@@ -39,6 +36,30 @@ public class SqlSourceBuilder extends BaseBuilder {
     super(configuration);
   }
 
+  /**
+   * sql 参数类型 ， 返回值
+   * <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+   * <!--@mbg.generated-->
+   * select
+   * <include refid="Base_Column_List" />
+   * from hs_sell
+   * where ID = #{id,jdbcType=INTEGER}
+   * </select>
+   * => 替换成问号
+   * select
+   * <p>
+   * <p>
+   * ID, USER_ID, GOOD_ID, PRICE, `SIZE`, COMPANY_ID, GROUP_ID, VERSION, DELETED, CREATE_USER,
+   * CREATE_TIME, UPDATE_USER, UPDATE_TIME, WORK_ORDER_ID
+   * <p>
+   * from hs_sell
+   * where ID = ?
+   *
+   * @param originalSql sql文本
+   * @param parameterType 默认 object
+   * @param additionalParameters
+   * @return
+   */
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
@@ -49,7 +70,9 @@ public class SqlSourceBuilder extends BaseBuilder {
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
 
     private List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+
     private Class<?> parameterType;
+
     private MetaObject metaParameters;
 
     public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
@@ -62,6 +85,12 @@ public class SqlSourceBuilder extends BaseBuilder {
       return parameterMappings;
     }
 
+    /**
+     * ? 的来源
+     *
+     * @param content
+     * @return
+     */
     @Override
     public String handleToken(String content) {
       parameterMappings.add(buildParameterMapping(content));
@@ -74,17 +103,22 @@ public class SqlSourceBuilder extends BaseBuilder {
       Class<?> propertyType;
       if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
         propertyType = metaParameters.getGetterType(property);
-      } else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
+      }
+      else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
-      } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
+      }
+      else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = java.sql.ResultSet.class;
-      } else if (property == null || Map.class.isAssignableFrom(parameterType)) {
+      }
+      else if (property == null || Map.class.isAssignableFrom(parameterType)) {
         propertyType = Object.class;
-      } else {
+      }
+      else {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
-        } else {
+        }
+        else {
           propertyType = Object.class;
         }
       }
@@ -97,23 +131,32 @@ public class SqlSourceBuilder extends BaseBuilder {
         if ("javaType".equals(name)) {
           javaType = resolveClass(value);
           builder.javaType(javaType);
-        } else if ("jdbcType".equals(name)) {
+        }
+        else if ("jdbcType".equals(name)) {
           builder.jdbcType(resolveJdbcType(value));
-        } else if ("mode".equals(name)) {
+        }
+        else if ("mode".equals(name)) {
           builder.mode(resolveParameterMode(value));
-        } else if ("numericScale".equals(name)) {
+        }
+        else if ("numericScale".equals(name)) {
           builder.numericScale(Integer.valueOf(value));
-        } else if ("resultMap".equals(name)) {
+        }
+        else if ("resultMap".equals(name)) {
           builder.resultMapId(value);
-        } else if ("typeHandler".equals(name)) {
+        }
+        else if ("typeHandler".equals(name)) {
           typeHandlerAlias = value;
-        } else if ("jdbcTypeName".equals(name)) {
+        }
+        else if ("jdbcTypeName".equals(name)) {
           builder.jdbcTypeName(value);
-        } else if ("property".equals(name)) {
+        }
+        else if ("property".equals(name)) {
           // Do Nothing
-        } else if ("expression".equals(name)) {
+        }
+        else if ("expression".equals(name)) {
           throw new BuilderException("Expression based parameters are not supported yet");
-        } else {
+        }
+        else {
           throw new BuilderException("An invalid property '" + name + "' was found in mapping #{" + content + "}.  Valid properties are " + parameterProperties);
         }
       }
@@ -126,9 +169,11 @@ public class SqlSourceBuilder extends BaseBuilder {
     private Map<String, String> parseParameterMapping(String content) {
       try {
         return new ParameterExpression(content);
-      } catch (BuilderException ex) {
+      }
+      catch (BuilderException ex) {
         throw ex;
-      } catch (Exception ex) {
+      }
+      catch (Exception ex) {
         throw new BuilderException("Parsing error was found in mapping #{" + content + "}.  Check syntax #{property|(expression), var1=value1, var2=value2, ...} ", ex);
       }
     }

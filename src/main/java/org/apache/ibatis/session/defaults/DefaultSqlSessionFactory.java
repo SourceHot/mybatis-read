@@ -86,7 +86,8 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   /**
    * <setting name="defaultExecutorType" value="SIMPLE"/>
-   * @param execType  setting 标签的 defaultExecutorType 属性
+   *
+   * @param execType setting 标签的 defaultExecutorType 属性
    * @param level 事物级别
    * @param autoCommit
    * @return
@@ -136,6 +137,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   /**
    * 获取 事物工厂
+   *
    * @param environment
    * @return
    */
@@ -148,6 +150,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
 
   /**
    * 关闭事物
+   *
    * @param tx
    */
   private void closeTransaction(Transaction tx) {

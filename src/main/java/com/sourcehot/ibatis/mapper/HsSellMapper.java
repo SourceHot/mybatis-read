@@ -6,18 +6,18 @@ import com.sourcehot.ibatis.entity.HsSell;
 import org.apache.ibatis.annotations.Param;
 
 public interface HsSellMapper {
-    int deleteByPrimaryKey(Integer id);
+  int deleteByPrimaryKey(Integer id);
 
-    int insert(HsSell record);
+  int insert(HsSell record);
 
-    int insertSelective(HsSell record);
+  int insertSelective(HsSell record);
 
-    HsSell selectByPrimaryKey(Integer id);
+  HsSell selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(HsSell record);
+  int updateByPrimaryKeySelective(HsSell record);
 
-    int updateByPrimaryKey(HsSell record);
+  int updateByPrimaryKey(HsSell record);
 
-    List<HsSell> list(@Param("ID") Integer id);
+  List<HsSell> list(@Param("ID") Integer id);
 
 }

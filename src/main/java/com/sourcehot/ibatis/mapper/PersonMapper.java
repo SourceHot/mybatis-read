@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface PersonMapper {
-    int ins(Person person);
+  int ins(Person person);
 
-    List<Person> list(@Param("iid") Integer id);
+  List<Person> list(@Param("iid") Integer id);
 
 }

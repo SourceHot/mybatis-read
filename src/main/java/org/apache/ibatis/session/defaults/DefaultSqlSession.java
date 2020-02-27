@@ -162,9 +162,10 @@ public class DefaultSqlSession implements SqlSession {
 
   /**
    * 执行query
+   *
    * @param statement Unique identifier matching the statement to use.
    * @param parameter A parameter object to pass to the statement.
-   * @param rowBounds  Bounds to limit object retrieval
+   * @param rowBounds Bounds to limit object retrieval
    * @param <E>
    * @return
    */

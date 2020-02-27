@@ -22,7 +22,7 @@ public interface Invoker {
    * 执行对应的方法
    *
    * @param target 实体
-   * @param args   参数
+   * @param args 参数
    * @return
    * @throws IllegalAccessException
    * @throws InvocationTargetException

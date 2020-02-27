@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.jdbc;
 
@@ -22,7 +19,6 @@ import java.util.List;
 
 /**
  * sql 脚本创建工具
-
  * @author Clinton Begin
  * @author Jeff Butler
  * @author Adam Gent
@@ -34,6 +30,7 @@ public abstract class AbstractSQL<T> {
    * and 替换文本
    */
   private static final String AND = ") \nAND (";
+
   /**
    * or 替换文本
    */
@@ -288,6 +285,7 @@ public abstract class AbstractSQL<T> {
 
   private static class SafeAppendable {
     private final Appendable a;
+
     private boolean empty = true;
 
     public SafeAppendable(Appendable a) {
@@ -301,7 +299,8 @@ public abstract class AbstractSQL<T> {
           empty = false;
         }
         a.append(s);
-      } catch (IOException e) {
+      }
+      catch (IOException e) {
         throw new RuntimeException(e);
       }
       return this;
@@ -318,37 +317,46 @@ public abstract class AbstractSQL<T> {
    */
   private static class SQLStatement {
 
-    /**
-     * CRUD 枚举
-     */
-    public enum StatementType {
-      DELETE, INSERT, SELECT, UPDATE
-    }
-
     StatementType statementType;
+
     List<String> sets = new ArrayList<String>();
+
     List<String> select = new ArrayList<String>();
+
     List<String> tables = new ArrayList<String>();
+
     List<String> join = new ArrayList<String>();
+
     List<String> innerJoin = new ArrayList<String>();
+
     List<String> outerJoin = new ArrayList<String>();
+
     List<String> leftOuterJoin = new ArrayList<String>();
+
     List<String> rightOuterJoin = new ArrayList<String>();
+
     List<String> where = new ArrayList<String>();
+
     List<String> having = new ArrayList<String>();
+
     List<String> groupBy = new ArrayList<String>();
+
     List<String> orderBy = new ArrayList<String>();
+
     List<String> lastList = new ArrayList<String>();
+
     List<String> columns = new ArrayList<String>();
+
     List<String> values = new ArrayList<String>();
+
     boolean distinct;
 
     public SQLStatement() {
-        // Prevent Synthetic Access
+      // Prevent Synthetic Access
     }
 
     private void sqlClause(SafeAppendable builder, String keyword, List<String> parts, String open, String close,
-                           String conjunction) {
+        String conjunction) {
       if (!parts.isEmpty()) {
         if (!builder.isEmpty()) {
           builder.append("\n");
@@ -371,14 +379,14 @@ public abstract class AbstractSQL<T> {
 
     /**
      * select 组装
-
      * @param builder
      * @return
      */
     private String selectSQL(SafeAppendable builder) {
       if (distinct) {
         sqlClause(builder, "SELECT DISTINCT", select, "", "", ", ");
-      } else {
+      }
+      else {
         sqlClause(builder, "SELECT", select, "", "", ", ");
       }
 
@@ -391,11 +399,11 @@ public abstract class AbstractSQL<T> {
       return builder.toString();
     }
 
-
     /**
      * join 组装
      * @param builder
-     */   private void joins(SafeAppendable builder) {
+     */
+    private void joins(SafeAppendable builder) {
       sqlClause(builder, "JOIN", join, "", "", "\nJOIN ");
       sqlClause(builder, "INNER JOIN", innerJoin, "", "", "\nINNER JOIN ");
       sqlClause(builder, "OUTER JOIN", outerJoin, "", "", "\nOUTER JOIN ");
@@ -407,7 +415,8 @@ public abstract class AbstractSQL<T> {
      * insert 组装
      * @param builder
      * @return
-     */  private String insertSQL(SafeAppendable builder) {
+     */
+    private String insertSQL(SafeAppendable builder) {
       sqlClause(builder, "INSERT INTO", tables, "", "", "");
       sqlClause(builder, "", columns, "(", ")", ", ");
       sqlClause(builder, "VALUES", values, "(", ")", ", ");
@@ -418,7 +427,8 @@ public abstract class AbstractSQL<T> {
      * delete 组装
      * @param builder
      * @return
-     */ private String deleteSQL(SafeAppendable builder) {
+     */
+    private String deleteSQL(SafeAppendable builder) {
       sqlClause(builder, "DELETE FROM", tables, "", "", "");
       sqlClause(builder, "WHERE", where, "(", ")", " AND ");
       return builder.toString();
@@ -428,7 +438,8 @@ public abstract class AbstractSQL<T> {
      * update 组装
      * @param builder
      * @return
-     */  private String updateSQL(SafeAppendable builder) {
+     */
+    private String updateSQL(SafeAppendable builder) {
       sqlClause(builder, "UPDATE", tables, "", "", "");
       joins(builder);
       sqlClause(builder, "SET", sets, "", "", ", ");
@@ -440,7 +451,8 @@ public abstract class AbstractSQL<T> {
      * sql 文本创建方式
      * @param a
      * @return
-     */ public String sql(Appendable a) {
+     */
+    public String sql(Appendable a) {
       SafeAppendable builder = new SafeAppendable(a);
       if (statementType == null) {
         return null;
@@ -475,6 +487,13 @@ public abstract class AbstractSQL<T> {
       }
 
       return answer;
+    }
+
+    /**
+     * CRUD 枚举
+     */
+    public enum StatementType {
+      DELETE, INSERT, SELECT, UPDATE
     }
   }
 }

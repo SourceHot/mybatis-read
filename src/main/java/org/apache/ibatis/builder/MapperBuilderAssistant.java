@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.builder;
 
@@ -54,9 +51,15 @@ import org.apache.ibatis.type.TypeHandler;
  */
 public class MapperBuilderAssistant extends BaseBuilder {
 
-  private String currentNamespace;
   private final String resource;
+
+  /**
+   * 当前 mapper.xml 中的 <mapper namespace="com.huifer.mybatis.mapper.PersonMapper"> namespace 属性值
+   */
+  private String currentNamespace;
+
   private Cache currentCache;
+
   private boolean unresolvedCacheRef; // issue #676
 
   public MapperBuilderAssistant(Configuration configuration, String resource) {
@@ -82,6 +85,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     this.currentNamespace = currentNamespace;
   }
 
+  /**
+   * @param base
+   * @param isReference
+   * @return 组装成 : namespace . base
+   */
   public String applyCurrentNamespace(String base, boolean isReference) {
     if (base == null) {
       return null;
@@ -91,7 +99,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       if (base.contains(".")) {
         return base;
       }
-    } else {
+    }
+    else {
       // is it qualified with this namespace yet?
       if (base.startsWith(currentNamespace + ".")) {
         return base;
@@ -103,12 +112,20 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return currentNamespace + "." + base;
   }
 
+
+  /**
+   * 使用缓存
+   *
+   * @param namespace <cache-ref namespace=""/>
+   * @return
+   */
   public Cache useCacheRef(String namespace) {
     if (namespace == null) {
       throw new BuilderException("cache-ref element requires a namespace attribute.");
     }
     try {
       unresolvedCacheRef = true;
+      // 从全局配置文件中获取 cache 内容
       Cache cache = configuration.getCache(namespace);
       if (cache == null) {
         throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.");
@@ -116,11 +133,24 @@ public class MapperBuilderAssistant extends BaseBuilder {
       currentCache = cache;
       unresolvedCacheRef = false;
       return cache;
-    } catch (IllegalArgumentException e) {
+    }
+    catch (IllegalArgumentException e) {
       throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.", e);
     }
   }
 
+  /**
+   * 初始化 {@link  Cache} 的方法
+   *
+   * @param typeClass 缓存实现类
+   * @param evictionClass 缓存策略
+   * @param flushInterval 刷新时间
+   * @param size 引用数量
+   * @param readWrite 是否只读
+   * @param blocking
+   * @param props 其他属性
+   * @return
+   */
   public Cache useNewCache(Class<? extends Cache> typeClass,
       Class<? extends Cache> evictionClass,
       Long flushInterval,
@@ -142,6 +172,14 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return cache;
   }
 
+  /**
+   * 向 {@link  Configuration} configuration 添加 parameter 标签的内容
+   *
+   * @param id
+   * @param parameterClass
+   * @param parameterMappings
+   * @return
+   */
   public ParameterMap addParameterMap(String id, Class<?> parameterClass, List<ParameterMapping> parameterMappings) {
     id = applyCurrentNamespace(id, false);
     ParameterMap parameterMap = new ParameterMap.Builder(configuration, id, parameterClass, parameterMappings).build();
@@ -149,6 +187,22 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return parameterMap;
   }
 
+  /**
+   * 构造查询参数映射器？
+   * * <parameterMap id="hc" type="com.huifer.mybatis.entity.PersonQuery">
+   * * < property="name" resultMap="base"/>
+   * * </parameterMap>
+   *
+   * @param parameterType parameterMap 标签的type 属性
+   * @param property property 标签 name 属性
+   * @param javaType javaType
+   * @param jdbcType jdbcType
+   * @param resultMap < property="name" resultMap="base"/> 的 resultMap 属性值
+   * @param parameterMode mode 属性值
+   * @param typeHandler typeHandler 属性值
+   * @param numericScale numericScale 属性值
+   * @return
+   */
   public ParameterMapping buildParameterMapping(
       Class<?> parameterType,
       String property,
@@ -173,6 +227,22 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .build();
   }
 
+  /**
+   * 添加 resultMap
+   * <resultMap id="base" type="com.huifer.mybatis.entity.Person">
+   * <id column="ID" jdbcType="VARCHAR" property="id"/>
+   * <result column="age" jdbcType="INTEGER" property="age"/>
+   * <collection property="name" jdbcType="VARCHAR"/>
+   * </resultMap>
+   *
+   * @param id resultMap 标签的 id 属性
+   * @param type resultMap 标签的 type 属性的字节码
+   * @param extend resultMap 标签的 extend 属性
+   * @param discriminator 下级标签
+   * @param resultMappings 夏季标签
+   * @param autoMapping resultMap 标签的 autoMapping 属性
+   * @return
+   */
   public ResultMap addResultMap(
       String id,
       Class<?> type,
@@ -208,6 +278,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       }
       resultMappings.addAll(extendedResultMappings);
     }
+    // 构建 ResultMap
     ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
         .discriminator(discriminator)
         .build();
@@ -316,10 +387,12 @@ public class MapperBuilderAssistant extends BaseBuilder {
     if (parameterMapName != null) {
       try {
         parameterMap = configuration.getParameterMap(parameterMapName);
-      } catch (IllegalArgumentException e) {
+      }
+      catch (IllegalArgumentException e) {
         throw new IncompleteElementException("Could not find parameter map " + parameterMapName, e);
       }
-    } else if (parameterTypeClass != null) {
+    }
+    else if (parameterTypeClass != null) {
       List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
       parameterMap = new ParameterMap.Builder(
           configuration,
@@ -342,11 +415,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
       for (String resultMapName : resultMapNames) {
         try {
           resultMaps.add(configuration.getResultMap(resultMapName.trim()));
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
           throw new IncompleteElementException("Could not find result map " + resultMapName, e);
         }
       }
-    } else if (resultType != null) {
+    }
+    else if (resultType != null) {
       ResultMap inlineResultMap = new ResultMap.Builder(
           configuration,
           statementId + "-Inline",
@@ -400,7 +475,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
           String column = parser.nextToken();
           columns.add(column);
         }
-      } else {
+      }
+      else {
         columns.add(columnName);
       }
     }
@@ -427,7 +503,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
       try {
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
         javaType = metaResultType.getSetterType(property);
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         //ignore, following null check statement will deal with the situation
       }
     }
@@ -437,14 +514,27 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return javaType;
   }
 
+  /**
+   * @param resultType 返回类型
+   * @param property 属性
+   * @param javaType java 类型
+   * @param jdbcType jdbc 类型
+   * @return
+   */
   private Class<?> resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType, JdbcType jdbcType) {
     if (javaType == null) {
       if (JdbcType.CURSOR.equals(jdbcType)) {
+        // java.sql.ResultSet 作为javaType 对象
         javaType = java.sql.ResultSet.class;
-      } else if (Map.class.isAssignableFrom(resultType)) {
+      }
+      else if (Map.class.isAssignableFrom(resultType)) {
+        // 如果是 map 接口那么Java 类型为Object
         javaType = Object.class;
-      } else {
+      }
+      else {
+        // 初始化
         MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
+        // 解析后是个 JAVA 基础类型对象 或者自定义对象
         javaType = metaResultType.getGetterType(property);
       }
     }
@@ -454,7 +544,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return javaType;
   }
 
-  /** Backward compatibility signature */
+  /**
+   * Backward compatibility signature
+   */
   public ResultMapping buildResultMapping(
       Class<?> resultType,
       String property,
@@ -467,7 +559,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler,
       List<ResultFlag> flags) {
-      return buildResultMapping(
+    return buildResultMapping(
         resultType, property, column, javaType, jdbcType, nestedSelect,
         nestedResultMap, notNullColumn, columnPrefix, typeHandler, flags, null, null, configuration.isLazyLoadingEnabled());
   }
@@ -475,38 +567,41 @@ public class MapperBuilderAssistant extends BaseBuilder {
   public LanguageDriver getLanguageDriver(Class<?> langClass) {
     if (langClass != null) {
       configuration.getLanguageRegistry().register(langClass);
-    } else {
+    }
+    else {
       langClass = configuration.getLanguageRegistry().getDefaultDriverClass();
     }
     return configuration.getLanguageRegistry().getDriver(langClass);
   }
 
-  /** Backward compatibility signature */
+  /**
+   * Backward compatibility signature
+   */
   public MappedStatement addMappedStatement(
-    String id,
-    SqlSource sqlSource,
-    StatementType statementType,
-    SqlCommandType sqlCommandType,
-    Integer fetchSize,
-    Integer timeout,
-    String parameterMap,
-    Class<?> parameterType,
-    String resultMap,
-    Class<?> resultType,
-    ResultSetType resultSetType,
-    boolean flushCache,
-    boolean useCache,
-    boolean resultOrdered,
-    KeyGenerator keyGenerator,
-    String keyProperty,
-    String keyColumn,
-    String databaseId,
-    LanguageDriver lang) {
+      String id,
+      SqlSource sqlSource,
+      StatementType statementType,
+      SqlCommandType sqlCommandType,
+      Integer fetchSize,
+      Integer timeout,
+      String parameterMap,
+      Class<?> parameterType,
+      String resultMap,
+      Class<?> resultType,
+      ResultSetType resultSetType,
+      boolean flushCache,
+      boolean useCache,
+      boolean resultOrdered,
+      KeyGenerator keyGenerator,
+      String keyProperty,
+      String keyColumn,
+      String databaseId,
+      LanguageDriver lang) {
     return addMappedStatement(
-      id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
-      parameterMap, parameterType, resultMap, resultType, resultSetType,
-      flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
-      keyColumn, databaseId, lang, null);
+        id, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
+        parameterMap, parameterType, resultMap, resultType, resultSetType,
+        flushCache, useCache, resultOrdered, keyGenerator, keyProperty,
+        keyColumn, databaseId, lang, null);
   }
 
 }

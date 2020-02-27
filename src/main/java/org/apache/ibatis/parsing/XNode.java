@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.parsing;
 
@@ -32,15 +29,21 @@ import org.w3c.dom.NodeList;
 public class XNode {
 
   private final Node node;
+
   private final String name;
+
   private final String body;
+
   private final Properties attributes;
+
   private final Properties variables;
+
   private final XPathParser xpathParser;
 
   /**
    * 构造函数 初始化数据
-   */ public XNode(XPathParser xpathParser, Node node, Properties variables) {
+   */
+  public XNode(XPathParser xpathParser, Node node, Properties variables) {
     this.xpathParser = xpathParser;
     this.node = node;
     this.name = node.getNodeName();
@@ -52,6 +55,7 @@ public class XNode {
   public XNode newXNode(Node node) {
     return new XNode(xpathParser, node, variables);
   }
+
   /**
    * 节点获取,核心是w3c xml 解析node后对解析结果包装成 {@link XNode}
    *
@@ -61,7 +65,8 @@ public class XNode {
     Node parent = node.getParentNode();
     if (parent == null || !(parent instanceof Element)) {
       return null;
-    } else {
+    }
+    else {
       return new XNode(xpathParser, parent, variables);
     }
   }
@@ -70,7 +75,8 @@ public class XNode {
    * 获取全路径
    *
    * @return
-   */public String getPath() {
+   */
+  public String getPath() {
     StringBuilder builder = new StringBuilder();
     Node current = node;
     while (current != null && current instanceof Element) {
@@ -87,7 +93,8 @@ public class XNode {
    * 外部调用,服务于 resultMap 标签
    *
    * @return
-   */ public String getValueBasedIdentifier() {
+   */
+  public String getValueBasedIdentifier() {
     StringBuilder builder = new StringBuilder();
     XNode current = this;
     while (current != null) {
@@ -146,7 +153,8 @@ public class XNode {
   public String getStringBody(String def) {
     if (body == null) {
       return def;
-    } else {
+    }
+    else {
       return body;
     }
   }
@@ -158,7 +166,8 @@ public class XNode {
   public Boolean getBooleanBody(Boolean def) {
     if (body == null) {
       return def;
-    } else {
+    }
+    else {
       return Boolean.valueOf(body);
     }
   }
@@ -170,7 +179,8 @@ public class XNode {
   public Integer getIntBody(Integer def) {
     if (body == null) {
       return def;
-    } else {
+    }
+    else {
       return Integer.parseInt(body);
     }
   }
@@ -182,7 +192,8 @@ public class XNode {
   public Long getLongBody(Long def) {
     if (body == null) {
       return def;
-    } else {
+    }
+    else {
       return Long.parseLong(body);
     }
   }
@@ -194,7 +205,8 @@ public class XNode {
   public Double getDoubleBody(Double def) {
     if (body == null) {
       return def;
-    } else {
+    }
+    else {
       return Double.parseDouble(body);
     }
   }
@@ -206,7 +218,8 @@ public class XNode {
   public Float getFloatBody(Float def) {
     if (body == null) {
       return def;
-    } else {
+    }
+    else {
       return Float.parseFloat(body);
     }
   }
@@ -219,14 +232,14 @@ public class XNode {
     String value = getStringAttribute(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return Enum.valueOf(enumType, value);
     }
   }
 
   /**
    * 通过标签的name属性获取值
-
    * @param name
    * @return
    */
@@ -244,7 +257,8 @@ public class XNode {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return value;
     }
   }
@@ -259,11 +273,13 @@ public class XNode {
    * @param name 属性名称
    * @param def  默认值
    * @return 属性名称-> 属性值
-   */  public Boolean getBooleanAttribute(String name, Boolean def) {
+   */
+  public Boolean getBooleanAttribute(String name, Boolean def) {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return Boolean.valueOf(value);
     }
   }
@@ -276,7 +292,8 @@ public class XNode {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return Integer.parseInt(value);
     }
   }
@@ -289,7 +306,8 @@ public class XNode {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return Long.parseLong(value);
     }
   }
@@ -302,7 +320,8 @@ public class XNode {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return Double.parseDouble(value);
     }
   }
@@ -315,7 +334,8 @@ public class XNode {
     String value = attributes.getProperty(name);
     if (value == null) {
       return def;
-    } else {
+    }
+    else {
       return Float.parseFloat(value);
     }
   }
@@ -338,7 +358,8 @@ public class XNode {
    * 解析配置文件xml的标签将返回 {name:value}
    *
    * @return
-   */  public Properties getChildrenAsProperties() {
+   */
+  public Properties getChildrenAsProperties() {
     Properties properties = new Properties();
     for (XNode child : getChildren()) {
       String name = child.getStringAttribute("name");
@@ -371,13 +392,15 @@ public class XNode {
       builder.append("</");
       builder.append(name);
       builder.append(">");
-    } else if (body != null) {
+    }
+    else if (body != null) {
       builder.append(">");
       builder.append(body);
       builder.append("</");
       builder.append(name);
       builder.append(">");
-    } else {
+    }
+    else {
       builder.append("/>");
     }
     builder.append("\n");
@@ -389,7 +412,8 @@ public class XNode {
    *
    * @param n
    * @return
-   */ private Properties parseAttributes(Node n) {
+   */
+  private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();
     if (attributeNodes != null) {

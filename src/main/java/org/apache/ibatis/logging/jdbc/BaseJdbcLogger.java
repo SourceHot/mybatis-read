@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.logging.jdbc;
 
@@ -31,34 +28,15 @@ import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
  * Base class for proxies to do logging
- * 
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
 public abstract class BaseJdbcLogger {
 
   protected static final Set<String> SET_METHODS = new HashSet<String>();
+
   protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
-
-  private final Map<Object, Object> columnMap = new HashMap<Object, Object>();
-
-  private final List<Object> columnNames = new ArrayList<Object>();
-  private final List<Object> columnValues = new ArrayList<Object>();
-
-  protected Log statementLog;
-  protected int queryStack;
-
-  /*
-   * Default constructor
-   */
-  public BaseJdbcLogger(Log log, int queryStack) {
-    this.statementLog = log;
-    if (queryStack == 0) {
-      this.queryStack = 1;
-    } else {
-      this.queryStack = queryStack;
-    }
-  }
 
   static {
     SET_METHODS.add("setString");
@@ -92,6 +70,29 @@ public abstract class BaseJdbcLogger {
     EXECUTE_METHODS.add("addBatch");
   }
 
+  private final Map<Object, Object> columnMap = new HashMap<Object, Object>();
+
+  private final List<Object> columnNames = new ArrayList<Object>();
+
+  private final List<Object> columnValues = new ArrayList<Object>();
+
+  protected Log statementLog;
+
+  protected int queryStack;
+
+  /*
+   * Default constructor
+   */
+  public BaseJdbcLogger(Log log, int queryStack) {
+    this.statementLog = log;
+    if (queryStack == 0) {
+      this.queryStack = 1;
+    }
+    else {
+      this.queryStack = queryStack;
+    }
+  }
+
   protected void setColumn(Object key, Object value) {
     columnMap.put(key, value);
     columnNames.add(key);
@@ -107,7 +108,8 @@ public abstract class BaseJdbcLogger {
     for (Object value : columnValues) {
       if (value == null) {
         typeList.add("null");
-      } else {
+      }
+      else {
         typeList.add(objectValueString(value) + "(" + value.getClass().getSimpleName() + ")");
       }
     }
@@ -119,7 +121,8 @@ public abstract class BaseJdbcLogger {
     if (value instanceof Array) {
       try {
         return ArrayUtil.toString(((Array) value).getArray());
-      } catch (SQLException e) {
+      }
+      catch (SQLException e) {
         return value.toString();
       }
     }
@@ -172,7 +175,8 @@ public abstract class BaseJdbcLogger {
     buffer[queryStack * 2 + 1] = ' ';
     if (isInput) {
       buffer[queryStack * 2] = '>';
-    } else {
+    }
+    else {
       buffer[0] = '<';
     }
     return new String(buffer);

@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2016 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.reflection;
 
@@ -29,6 +26,10 @@ import java.util.Arrays;
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
+
+  private TypeParameterResolver() {
+    super();
+  }
 
   /**
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
@@ -74,11 +75,14 @@ public class TypeParameterResolver {
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
-    } else if (type instanceof ParameterizedType) {
+    }
+    else if (type instanceof ParameterizedType) {
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
-    } else if (type instanceof GenericArrayType) {
+    }
+    else if (type instanceof GenericArrayType) {
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
-    } else {
+    }
+    else {
       return type;
     }
   }
@@ -89,17 +93,20 @@ public class TypeParameterResolver {
     if (componentType instanceof TypeVariable) {
       // TypeVariable 类型解析
       resolvedComponentType = resolveTypeVar((TypeVariable<?>) componentType, srcType, declaringClass);
-    } else if (componentType instanceof GenericArrayType) {
+    }
+    else if (componentType instanceof GenericArrayType) {
       // GenericArrayType 类型解析
       resolvedComponentType = resolveGenericArrayType((GenericArrayType) componentType, srcType, declaringClass);
-    } else if (componentType instanceof ParameterizedType) {
+    }
+    else if (componentType instanceof ParameterizedType) {
       // ParameterizedType 类型解析
       resolvedComponentType = resolveParameterizedType((ParameterizedType) componentType, srcType, declaringClass);
     }
     if (resolvedComponentType instanceof Class) {
       // class 类型解析
       return Array.newInstance((Class<?>) resolvedComponentType, 0).getClass();
-    } else {
+    }
+    else {
       // 直接返回
       return new GenericArrayTypeImpl(resolvedComponentType);
     }
@@ -119,11 +126,14 @@ public class TypeParameterResolver {
     for (int i = 0; i < typeArgs.length; i++) {
       if (typeArgs[i] instanceof TypeVariable) {
         args[i] = resolveTypeVar((TypeVariable<?>) typeArgs[i], srcType, declaringClass);
-      } else if (typeArgs[i] instanceof ParameterizedType) {
+      }
+      else if (typeArgs[i] instanceof ParameterizedType) {
         args[i] = resolveParameterizedType((ParameterizedType) typeArgs[i], srcType, declaringClass);
-      } else if (typeArgs[i] instanceof WildcardType) {
+      }
+      else if (typeArgs[i] instanceof WildcardType) {
         args[i] = resolveWildcardType((WildcardType) typeArgs[i], srcType, declaringClass);
-      } else {
+      }
+      else {
         args[i] = typeArgs[i];
       }
     }
@@ -141,11 +151,14 @@ public class TypeParameterResolver {
     for (int i = 0; i < bounds.length; i++) {
       if (bounds[i] instanceof TypeVariable) {
         result[i] = resolveTypeVar((TypeVariable<?>) bounds[i], srcType, declaringClass);
-      } else if (bounds[i] instanceof ParameterizedType) {
+      }
+      else if (bounds[i] instanceof ParameterizedType) {
         result[i] = resolveParameterizedType((ParameterizedType) bounds[i], srcType, declaringClass);
-      } else if (bounds[i] instanceof WildcardType) {
+      }
+      else if (bounds[i] instanceof WildcardType) {
         result[i] = resolveWildcardType((WildcardType) bounds[i], srcType, declaringClass);
-      } else {
+      }
+      else {
         result[i] = bounds[i];
       }
     }
@@ -157,16 +170,18 @@ public class TypeParameterResolver {
     Class<?> clazz = null;
     if (srcType instanceof Class) {
       clazz = (Class<?>) srcType;
-    } else if (srcType instanceof ParameterizedType) {
+    }
+    else if (srcType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) srcType;
       clazz = (Class<?>) parameterizedType.getRawType();
-    } else {
+    }
+    else {
       throw new IllegalArgumentException("The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
     }
 
     if (clazz == declaringClass) {
       Type[] bounds = typeVar.getBounds();
-      if(bounds.length > 0) {
+      if (bounds.length > 0) {
         return bounds[0];
       }
       return Object.class;
@@ -222,24 +237,23 @@ public class TypeParameterResolver {
                   break;
                 }
               }
-            } else {
+            }
+            else {
               result = typeArgs[i];
             }
           }
         }
-      } else if (declaringClass.isAssignableFrom(parentAsClass)) {
+      }
+      else if (declaringClass.isAssignableFrom(parentAsClass)) {
         result = resolveTypeVar(typeVar, parentAsType, declaringClass);
       }
-    } else if (superclass instanceof Class) {
+    }
+    else if (superclass instanceof Class) {
       if (declaringClass.isAssignableFrom((Class<?>) superclass)) {
         result = resolveTypeVar(typeVar, superclass, declaringClass);
       }
     }
     return result;
-  }
-
-  private TypeParameterResolver() {
-    super();
   }
 
   static class ParameterizedTypeImpl implements ParameterizedType {

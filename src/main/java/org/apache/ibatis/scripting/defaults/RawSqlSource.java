@@ -23,11 +23,11 @@ import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.session.Configuration;
 
 /**
- * Static SqlSource. It is faster than {@link DynamicSqlSource} because mappings are 
+ * Static SqlSource. It is faster than {@link DynamicSqlSource} because mappings are
  * calculated during startup.
  *
- * @since 3.2.0
  * @author Eduardo Macarron
+ * @since 3.2.0
  */
 public class RawSqlSource implements SqlSource {
 
@@ -39,6 +39,7 @@ public class RawSqlSource implements SqlSource {
 
   /**
    * 初始化方法
+   *
    * @param configuration 配置
    * @param sql sql 文本
    * @param parameterType

@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2015 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.cursor;
 
@@ -26,23 +23,22 @@ import java.io.Closeable;
  */
 public interface Cursor<T> extends Closeable, Iterable<T> {
 
-    /**
-     * 游标开始从数据库获取数据,返回true,反之false
+  /**
+   * 游标开始从数据库获取数据,返回true,反之false
+   * @return true if the cursor has started to fetch items from database.
+   */
+  boolean isOpen();
 
-     * @return true if the cursor has started to fetch items from database.
-     */
-    boolean isOpen();
+  /**
+   * 数据库元素都被获取,返回true,反之false
+   * @return true if the cursor is fully consumed and has returned all elements matching the query.
+   */
+  boolean isConsumed();
 
-    /**
-     * 数据库元素都被获取,返回true,反之false
-     * @return true if the cursor is fully consumed and has returned all elements matching the query.
-     */
-    boolean isConsumed();
-
-    /**
-     * 获取数据索引,从0开始,没有返回-1
-     * Get the current item index. The first item has the index 0.
-     * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
-     */
-    int getCurrentIndex();
+  /**
+   * 获取数据索引,从0开始,没有返回-1
+   * Get the current item index. The first item has the index 0.
+   * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
+   */
+  int getCurrentIndex();
 }

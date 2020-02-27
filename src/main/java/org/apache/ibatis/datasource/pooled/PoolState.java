@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2015 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.datasource.pooled;
 
@@ -23,17 +20,26 @@ import java.util.List;
  */
 public class PoolState {
 
+  protected final List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
+
+  protected final List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
+
   protected PooledDataSource dataSource;
 
-  protected final List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
-  protected final List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
   protected long requestCount = 0;
+
   protected long accumulatedRequestTime = 0;
+
   protected long accumulatedCheckoutTime = 0;
+
   protected long claimedOverdueConnectionCount = 0;
+
   protected long accumulatedCheckoutTimeOfOverdueConnections = 0;
+
   protected long accumulatedWaitTime = 0;
+
   protected long hadToWaitCount = 0;
+
   protected long badConnectionCount = 0;
 
   public PoolState(PooledDataSource dataSource) {

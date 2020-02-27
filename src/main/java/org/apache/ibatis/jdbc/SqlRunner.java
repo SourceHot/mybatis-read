@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.jdbc;
 
@@ -40,7 +37,9 @@ public class SqlRunner {
   public static final int NO_GENERATED_KEY = Integer.MIN_VALUE + 1001;
 
   private final Connection connection;
+
   private final TypeHandlerRegistry typeHandlerRegistry;
+
   private boolean useGeneratedKeySupport;
 
   public SqlRunner(Connection connection) {
@@ -82,10 +81,12 @@ public class SqlRunner {
       setParameters(ps, args);
       ResultSet rs = ps.executeQuery();
       return getResults(rs);
-    } finally {
+    }
+    finally {
       try {
         ps.close();
-      } catch (SQLException e) {
+      }
+      catch (SQLException e) {
         //ignore
       }
     }
@@ -103,7 +104,8 @@ public class SqlRunner {
     PreparedStatement ps;
     if (useGeneratedKeySupport) {
       ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-    } else {
+    }
+    else {
       ps = connection.prepareStatement(sql);
     }
 
@@ -120,7 +122,8 @@ public class SqlRunner {
             if (genkey != null) {
               try {
                 return Integer.parseInt(genkey.toString());
-              } catch (NumberFormatException e) {
+              }
+              catch (NumberFormatException e) {
                 //ignore, no numeric key support
               }
             }
@@ -128,10 +131,12 @@ public class SqlRunner {
         }
       }
       return NO_GENERATED_KEY;
-    } finally {
+    }
+    finally {
       try {
         ps.close();
-      } catch (SQLException e) {
+      }
+      catch (SQLException e) {
         //ignore
       }
     }
@@ -150,10 +155,12 @@ public class SqlRunner {
     try {
       setParameters(ps, args);
       return ps.executeUpdate();
-    } finally {
+    }
+    finally {
       try {
         ps.close();
-      } catch (SQLException e) {
+      }
+      catch (SQLException e) {
         //ignore
       }
     }
@@ -182,10 +189,12 @@ public class SqlRunner {
     Statement stmt = connection.createStatement();
     try {
       stmt.execute(sql);
-    } finally {
+    }
+    finally {
       try {
         stmt.close();
-      } catch (SQLException e) {
+      }
+      catch (SQLException e) {
         //ignore
       }
     }
@@ -194,7 +203,8 @@ public class SqlRunner {
   public void closeConnection() {
     try {
       connection.close();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       //ignore
     }
   }
@@ -203,13 +213,16 @@ public class SqlRunner {
     for (int i = 0, n = args.length; i < n; i++) {
       if (args[i] == null) {
         throw new SQLException("SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
-      } else if (args[i] instanceof Null) {
+      }
+      else if (args[i] instanceof Null) {
         ((Null) args[i]).getTypeHandler().setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
-      } else {
+      }
+      else {
         TypeHandler typeHandler = typeHandlerRegistry.getTypeHandler(args[i].getClass());
         if (typeHandler == null) {
           throw new SQLException("SqlRunner could not find a TypeHandler instance for " + args[i].getClass());
-        } else {
+        }
+        else {
           typeHandler.setParameter(ps, i + 1, args[i], null);
         }
       }
@@ -231,7 +244,8 @@ public class SqlRunner {
             typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);
           }
           typeHandlers.add(typeHandler);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
           typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));
         }
       }
@@ -245,11 +259,13 @@ public class SqlRunner {
         list.add(row);
       }
       return list;
-    } finally {
+    }
+    finally {
       if (rs != null) {
         try {
-            rs.close();
-        } catch (Exception e) {
+          rs.close();
+        }
+        catch (Exception e) {
           // ignore
         }
       }

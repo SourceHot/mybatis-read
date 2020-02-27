@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.io;
 
@@ -61,66 +58,6 @@ public class ResolverUtil<T> {
    * An instance of Log to use for logging in this class.
    */
   private static final Log log = LogFactory.getLog(ResolverUtil.class);
-
-  /**
-   * A simple interface that specifies how to test classes to determine if they
-   * are to be included in the results produced by the ResolverUtil.
-   */
-  public interface Test {
-    /**
-     * Will be called repeatedly with candidate classes. Must return True if a class
-     * is to be included in the results, false otherwise.
-     */
-    boolean matches(Class<?> type);
-  }
-
-  /**
-   * A Test that checks to see if each class is assignable to the provided class. Note
-   * that this test will match the parent type itself if it is presented for matching.
-   */
-  public static class IsA implements Test {
-    private Class<?> parent;
-
-    /** Constructs an IsA test using the supplied Class as the parent class/interface. */
-    public IsA(Class<?> parentType) {
-      this.parent = parentType;
-    }
-
-    /** Returns true if type is assignable to the parent type supplied in the constructor. */
-    @Override
-    public boolean matches(Class<?> type) {
-      return type != null && parent.isAssignableFrom(type);
-    }
-
-    @Override
-    public String toString() {
-      return "is assignable to " + parent.getSimpleName();
-    }
-  }
-
-  /**
-   * A Test that checks to see if each class is annotated with a specific annotation. If it
-   * is, then the test returns true, otherwise false.
-   */
-  public static class AnnotatedWith implements Test {
-    private Class<? extends Annotation> annotation;
-
-    /** Constructs an AnnotatedWith test for the specified annotation type. */
-    public AnnotatedWith(Class<? extends Annotation> annotation) {
-      this.annotation = annotation;
-    }
-
-    /** Returns true if the type is annotated with the class provided to the constructor. */
-    @Override
-    public boolean matches(Class<?> type) {
-      return type != null && type.isAnnotationPresent(annotation);
-    }
-
-    @Override
-    public String toString() {
-      return "annotated with @" + annotation.getSimpleName();
-    }
-  }
 
   /** The set of matches being accumulated. */
   private Set<Class<? extends T>> matches = new HashSet<Class<? extends T>>();
@@ -223,7 +160,8 @@ public class ResolverUtil<T> {
           addIfMatching(test, child);
         }
       }
-    } catch (IOException ioe) {
+    }
+    catch (IOException ioe) {
       log.error("Could not read package: " + packageName, ioe);
     }
 
@@ -233,7 +171,7 @@ public class ResolverUtil<T> {
   /**
    * Converts a Java package name to a path that can be looked up with a call to
    * {@link ClassLoader#getResources(String)}.
-   * 
+   *
    * @param packageName The Java package name to convert to a path
    */
   protected String getPackagePath(String packageName) {
@@ -260,9 +198,70 @@ public class ResolverUtil<T> {
       if (test.matches(type)) {
         matches.add((Class<T>) type);
       }
-    } catch (Throwable t) {
+    }
+    catch (Throwable t) {
       log.warn("Could not examine class '" + fqn + "'" + " due to a " +
           t.getClass().getName() + " with message: " + t.getMessage());
+    }
+  }
+
+  /**
+   * A simple interface that specifies how to test classes to determine if they
+   * are to be included in the results produced by the ResolverUtil.
+   */
+  public interface Test {
+    /**
+     * Will be called repeatedly with candidate classes. Must return True if a class
+     * is to be included in the results, false otherwise.
+     */
+    boolean matches(Class<?> type);
+  }
+
+  /**
+   * A Test that checks to see if each class is assignable to the provided class. Note
+   * that this test will match the parent type itself if it is presented for matching.
+   */
+  public static class IsA implements Test {
+    private Class<?> parent;
+
+    /** Constructs an IsA test using the supplied Class as the parent class/interface. */
+    public IsA(Class<?> parentType) {
+      this.parent = parentType;
+    }
+
+    /** Returns true if type is assignable to the parent type supplied in the constructor. */
+    @Override
+    public boolean matches(Class<?> type) {
+      return type != null && parent.isAssignableFrom(type);
+    }
+
+    @Override
+    public String toString() {
+      return "is assignable to " + parent.getSimpleName();
+    }
+  }
+
+  /**
+   * A Test that checks to see if each class is annotated with a specific annotation. If it
+   * is, then the test returns true, otherwise false.
+   */
+  public static class AnnotatedWith implements Test {
+    private Class<? extends Annotation> annotation;
+
+    /** Constructs an AnnotatedWith test for the specified annotation type. */
+    public AnnotatedWith(Class<? extends Annotation> annotation) {
+      this.annotation = annotation;
+    }
+
+    /** Returns true if the type is annotated with the class provided to the constructor. */
+    @Override
+    public boolean matches(Class<?> type) {
+      return type != null && type.isAnnotationPresent(annotation);
+    }
+
+    @Override
+    public String toString() {
+      return "annotated with @" + annotation.getSimpleName();
     }
   }
 }

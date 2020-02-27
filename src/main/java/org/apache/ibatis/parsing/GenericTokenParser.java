@@ -40,6 +40,7 @@ public class GenericTokenParser {
 
   /**
    * 核心处理方法 , 看测试类{@link org.apache.ibatis.parsing.GenericTokenParserTest}
+   *
    * @param text
    * @return
    */

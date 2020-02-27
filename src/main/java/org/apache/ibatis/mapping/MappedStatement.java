@@ -181,7 +181,9 @@ public final class MappedStatement {
     return resultSets;
   }
 
-  /** @deprecated Use {@link #getResultSets()} */
+  /**
+   * @deprecated Use {@link #getResultSets()}
+   */
   @Deprecated
   public String[] getResulSets() {
     return resultSets;
@@ -189,6 +191,7 @@ public final class MappedStatement {
 
   /**
    * 获取sql文 , 获取{@link  BoundSql},在触发 sql 的时候才会使用这个方法
+   *
    * @param parameterObject
    * @return
    */
@@ -327,7 +330,9 @@ public final class MappedStatement {
       return this;
     }
 
-    /** @deprecated Use {@link #resultSets} */
+    /**
+     * @deprecated Use {@link #resultSets}
+     */
     @Deprecated
     public Builder resulSets(String resultSet) {
       mappedStatement.resultSets = delimitedStringToArray(resultSet);

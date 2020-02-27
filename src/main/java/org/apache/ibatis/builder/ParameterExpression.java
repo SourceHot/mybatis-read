@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2016 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.builder;
 
@@ -19,7 +16,7 @@ import java.util.HashMap;
 
 /**
  * Inline parameter expression parser. Supported grammar (simplified):
- * 
+ *
  * <pre>
  * inline-parameter = (propertyName | expression) oldJdbcType attributes
  * propertyName = /expression language's property navigation path/
@@ -43,7 +40,8 @@ public class ParameterExpression extends HashMap<String, String> {
     int p = skipWS(expression, 0);
     if (expression.charAt(p) == '(') {
       expression(expression, p + 1);
-    } else {
+    }
+    else {
       property(expression, p);
     }
   }
@@ -54,7 +52,8 @@ public class ParameterExpression extends HashMap<String, String> {
     while (match > 0) {
       if (expression.charAt(right) == ')') {
         match--;
-      } else if (expression.charAt(right) == '(') {
+      }
+      else if (expression.charAt(right) == '(') {
         match++;
       }
       right++;
@@ -95,9 +94,11 @@ public class ParameterExpression extends HashMap<String, String> {
     if (p < expression.length()) {
       if (expression.charAt(p) == ':') {
         jdbcType(expression, p + 1);
-      } else if (expression.charAt(p) == ',') {
+      }
+      else if (expression.charAt(p) == ',') {
         option(expression, p + 1);
-      } else {
+      }
+      else {
         throw new BuilderException("Parsing error in {" + expression + "} in position " + p);
       }
     }
@@ -108,7 +109,8 @@ public class ParameterExpression extends HashMap<String, String> {
     int right = skipUntil(expression, left, ",");
     if (right > left) {
       put("jdbcType", trimmedStr(expression, left, right));
-    } else {
+    }
+    else {
       throw new BuilderException("Parsing error in {" + expression + "} in position " + p);
     }
     option(expression, right + 1);

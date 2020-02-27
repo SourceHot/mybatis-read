@@ -54,6 +54,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
   /**
    * 反射生成对象
+   *
    * @param type
    * @param constructorArgTypes
    * @param constructorArgs
@@ -99,6 +100,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
   /**
    * 根据type 的类型返回对应的数据类型
+   *
    * @param type
    * @return
    */
@@ -124,6 +126,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
   /**
    * 判断是否是 List
+   *
    * @param type Object type
    * @param <T>
    * @return

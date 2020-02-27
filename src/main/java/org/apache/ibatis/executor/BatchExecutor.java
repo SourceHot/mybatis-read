@@ -34,6 +34,7 @@ import org.apache.ibatis.transaction.Transaction;
 
 /**
  * 批量处理器
+ *
  * @author Jeff Butler
  */
 public class BatchExecutor extends BaseExecutor {

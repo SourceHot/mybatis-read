@@ -25,6 +25,7 @@ public interface ObjectWrapper {
 
   /**
    * 根据 prop 获取属性值
+   *
    * @param prop
    * @return
    */
@@ -33,7 +34,7 @@ public interface ObjectWrapper {
   /**
    * 设置属性
    *
-   * @param prop  属性值名称
+   * @param prop 属性值名称
    * @param value 属性值
    */
   void set(PropertyTokenizer prop, Object value);

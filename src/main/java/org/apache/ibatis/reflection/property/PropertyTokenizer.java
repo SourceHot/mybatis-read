@@ -28,7 +28,7 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
 
   /**
    * 数据初始化
-
+   *
    * @param fullname
    */
   public PropertyTokenizer(String fullname) {

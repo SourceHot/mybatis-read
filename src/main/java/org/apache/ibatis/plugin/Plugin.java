@@ -41,6 +41,7 @@ public class Plugin implements InvocationHandler {
 
   /**
    * 外部插件的调用方法
+   *
    * @param target obj
    * @param interceptor 插件的接口实现类
    * @return

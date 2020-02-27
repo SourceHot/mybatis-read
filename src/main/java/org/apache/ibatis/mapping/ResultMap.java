@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.mapping;
 
@@ -45,21 +42,85 @@ public class ResultMap {
   private Configuration configuration;
 
   private String id;
+
   /***
    * db 的实体对象
-   */ private Class<?> type;
+   */
+  private Class<?> type;
+
   private List<ResultMapping> resultMappings;
+
   private List<ResultMapping> idResultMappings;
+
   private List<ResultMapping> constructorResultMappings;
+
   private List<ResultMapping> propertyResultMappings;
+
   private Set<String> mappedColumns;
+
   private Set<String> mappedProperties;
+
   private Discriminator discriminator;
+
   private boolean hasNestedResultMaps;
+
   private boolean hasNestedQueries;
+
   private Boolean autoMapping;
 
   private ResultMap() {
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public boolean hasNestedResultMaps() {
+    return hasNestedResultMaps;
+  }
+
+  public boolean hasNestedQueries() {
+    return hasNestedQueries;
+  }
+
+  public Class<?> getType() {
+    return type;
+  }
+
+  public List<ResultMapping> getResultMappings() {
+    return resultMappings;
+  }
+
+  public List<ResultMapping> getConstructorResultMappings() {
+    return constructorResultMappings;
+  }
+
+  public List<ResultMapping> getPropertyResultMappings() {
+    return propertyResultMappings;
+  }
+
+  public List<ResultMapping> getIdResultMappings() {
+    return idResultMappings;
+  }
+
+  public Set<String> getMappedColumns() {
+    return mappedColumns;
+  }
+
+  public Set<String> getMappedProperties() {
+    return mappedProperties;
+  }
+
+  public Discriminator getDiscriminator() {
+    return discriminator;
+  }
+
+  public void forceNestedResultMaps() {
+    hasNestedResultMaps = true;
+  }
+
+  public Boolean getAutoMapping() {
+    return autoMapping;
   }
 
   public static class Builder {
@@ -104,7 +165,8 @@ public class ResultMap {
         final String column = resultMapping.getColumn();
         if (column != null) {
           resultMap.mappedColumns.add(column.toUpperCase(Locale.ENGLISH));
-        } else if (resultMapping.isCompositeResult()) {
+        }
+        else if (resultMapping.isCompositeResult()) {
           for (ResultMapping compositeResultMapping : resultMapping.getComposites()) {
             final String compositeColumn = compositeResultMapping.getColumn();
             if (compositeColumn != null) {
@@ -113,7 +175,7 @@ public class ResultMap {
           }
         }
         final String property = resultMapping.getProperty();
-        if(property != null) {
+        if (property != null) {
           resultMap.mappedProperties.add(property);
         }
         if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
@@ -121,7 +183,8 @@ public class ResultMap {
           if (resultMapping.getProperty() != null) {
             constructorArgNames.add(resultMapping.getProperty());
           }
-        } else {
+        }
+        else {
           resultMap.propertyResultMappings.add(resultMapping);
         }
         if (resultMapping.getFlags().contains(ResultFlag.ID)) {
@@ -216,58 +279,6 @@ public class ResultMap {
       }
       return paramNames;
     }
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public boolean hasNestedResultMaps() {
-    return hasNestedResultMaps;
-  }
-
-  public boolean hasNestedQueries() {
-    return hasNestedQueries;
-  }
-
-  public Class<?> getType() {
-    return type;
-  }
-
-  public List<ResultMapping> getResultMappings() {
-    return resultMappings;
-  }
-
-  public List<ResultMapping> getConstructorResultMappings() {
-    return constructorResultMappings;
-  }
-
-  public List<ResultMapping> getPropertyResultMappings() {
-    return propertyResultMappings;
-  }
-
-  public List<ResultMapping> getIdResultMappings() {
-    return idResultMappings;
-  }
-
-  public Set<String> getMappedColumns() {
-    return mappedColumns;
-  }
-
-  public Set<String> getMappedProperties() {
-    return mappedProperties;
-  }
-
-  public Discriminator getDiscriminator() {
-    return discriminator;
-  }
-
-  public void forceNestedResultMaps() {
-    hasNestedResultMaps = true;
-  }
-  
-  public Boolean getAutoMapping() {
-    return autoMapping;
   }
 
 }

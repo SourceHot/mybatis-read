@@ -67,7 +67,6 @@ public class ArrayUtil {
   }
 
   /**
-   *
    * 比较是否相同
    * Compares two objects. Returns <code>true</code> if
    * <ul>

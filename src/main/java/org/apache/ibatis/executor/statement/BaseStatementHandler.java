@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2016 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.executor.statement;
 
@@ -39,13 +36,19 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 public abstract class BaseStatementHandler implements StatementHandler {
 
   protected final Configuration configuration;
+
   protected final ObjectFactory objectFactory;
+
   protected final TypeHandlerRegistry typeHandlerRegistry;
+
   protected final ResultSetHandler resultSetHandler;
+
   protected final ParameterHandler parameterHandler;
 
   protected final Executor executor;
+
   protected final MappedStatement mappedStatement;
+
   protected final RowBounds rowBounds;
 
   protected BoundSql boundSql;
@@ -89,10 +92,12 @@ public abstract class BaseStatementHandler implements StatementHandler {
       setStatementTimeout(statement, transactionTimeout);
       setFetchSize(statement);
       return statement;
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       closeStatement(statement);
       throw e;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       closeStatement(statement);
       throw new ExecutorException("Error preparing statement.  Cause: " + e, e);
     }
@@ -104,7 +109,8 @@ public abstract class BaseStatementHandler implements StatementHandler {
     Integer queryTimeout = null;
     if (mappedStatement.getTimeout() != null) {
       queryTimeout = mappedStatement.getTimeout();
-    } else if (configuration.getDefaultStatementTimeout() != null) {
+    }
+    else if (configuration.getDefaultStatementTimeout() != null) {
       queryTimeout = configuration.getDefaultStatementTimeout();
     }
     if (queryTimeout != null) {
@@ -130,7 +136,8 @@ public abstract class BaseStatementHandler implements StatementHandler {
       if (statement != null) {
         statement.close();
       }
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       //ignore
     }
   }

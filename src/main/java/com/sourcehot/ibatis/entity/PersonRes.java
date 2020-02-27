@@ -1,58 +1,63 @@
 package com.sourcehot.ibatis.entity;
 
-public class PersonRes extends Object{
-    private int id;
-    private String name;
-    private int age;
-    private String phone;
-    private String email;
-    private String address;
+public class PersonRes extends Object {
+  private int id;
 
-    public int getId() {
-        return id;
-    }
+  private String name;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  private int age;
 
-    public String getName() {
-        return name;
-    }
+  private String phone;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  private String email;
 
-    public int getAge() {
-        return age;
-    }
+  private String address;
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public int getAge() {
+    return age;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public void setAge(int age) {
+    this.age = age;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
 }

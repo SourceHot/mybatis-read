@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.cache.decorators;
 
@@ -54,7 +51,8 @@ public class SerializedCache implements Cache {
   public void putObject(Object key, Object object) {
     if (object == null || object instanceof Serializable) {
       delegate.putObject(key, serialize((Serializable) object));
-    } else {
+    }
+    else {
       throw new CacheException("SharedCache failed to make a copy of a non-serializable object: " + object);
     }
   }
@@ -98,7 +96,8 @@ public class SerializedCache implements Cache {
       oos.flush();
       oos.close();
       return bos.toByteArray();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new CacheException("Error serializing object.  Cause: " + e, e);
     }
   }
@@ -110,7 +109,8 @@ public class SerializedCache implements Cache {
       ObjectInputStream ois = new CustomObjectInputStream(bis);
       result = (Serializable) ois.readObject();
       ois.close();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new CacheException("Error deserializing object.  Cause: " + e, e);
     }
     return result;
@@ -126,7 +126,7 @@ public class SerializedCache implements Cache {
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
       return Resources.classForName(desc.getName());
     }
-    
+
   }
 
 }

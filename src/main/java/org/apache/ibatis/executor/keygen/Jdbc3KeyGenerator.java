@@ -1,17 +1,14 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2017 the original author or authors.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.executor.keygen;
 
@@ -81,13 +78,16 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
           populateKeys(rs, metaParam, keyProperties, typeHandlers);
         }
       }
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       throw new ExecutorException("Error getting generated key or setting result to parameter object. Cause: " + e, e);
-    } finally {
+    }
+    finally {
       if (rs != null) {
         try {
           rs.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
           // ignore
         }
       }
@@ -98,13 +98,16 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
     Collection<Object> parameters = null;
     if (parameter instanceof Collection) {
       parameters = (Collection) parameter;
-    } else if (parameter instanceof Map) {
+    }
+    else if (parameter instanceof Map) {
       Map parameterMap = (Map) parameter;
       if (parameterMap.containsKey("collection")) {
         parameters = (Collection) parameterMap.get("collection");
-      } else if (parameterMap.containsKey("list")) {
+      }
+      else if (parameterMap.containsKey("list")) {
         parameters = (List) parameterMap.get("list");
-      } else if (parameterMap.containsKey("array")) {
+      }
+      else if (parameterMap.containsKey("array")) {
         parameters = Arrays.asList((Object[]) parameterMap.get("array"));
       }
     }
@@ -123,7 +126,8 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
         try {
           Class<?> keyPropertyType = metaParam.getSetterType(keyProperties[i]);
           th = typeHandlerRegistry.getTypeHandler(keyPropertyType, JdbcType.forCode(rsmd.getColumnType(i + 1)));
-        } catch (BindingException e) {
+        }
+        catch (BindingException e) {
           th = null;
         }
         typeHandlers[i] = th;

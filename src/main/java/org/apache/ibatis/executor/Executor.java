@@ -33,6 +33,7 @@ public interface Executor {
 
   /**
    * 更新方法   update , insert , delete 都执行这个方法
+   *
    * @param ms sql文
    * @param parameter 查询参数
    * @return
@@ -42,6 +43,7 @@ public interface Executor {
 
   /**
    * 查询方法
+   *
    * @param ms sql 文
    * @param parameter 查询参数
    * @param rowBounds
@@ -56,6 +58,7 @@ public interface Executor {
 
   /**
    * 查询方法 有一个doQuery() {@link BaseExecutor#doQuery(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.mapping.BoundSql)}
+   *
    * @param ms
    * @param parameter
    * @param rowBounds
@@ -70,6 +73,7 @@ public interface Executor {
 
   /**
    * 批量sql
+   *
    * @return
    * @throws SQLException
    */
@@ -77,6 +81,7 @@ public interface Executor {
 
   /**
    * 提交
+   *
    * @param required
    * @throws SQLException
    */
@@ -84,6 +89,7 @@ public interface Executor {
 
   /**
    * 回调, 事务回滚
+   *
    * @param required
    * @throws SQLException
    */
@@ -91,6 +97,7 @@ public interface Executor {
 
   /**
    * 缓存key的创建
+   *
    * @param ms
    * @param parameterObject
    * @param rowBounds
@@ -108,6 +115,7 @@ public interface Executor {
 
   /**
    * 延迟加载
+   *
    * @param ms
    * @param resultObject
    * @param property
@@ -119,18 +127,21 @@ public interface Executor {
 
   /**
    * 获取事物
+   *
    * @return
    */
   Transaction getTransaction();
 
   /**
    * 关闭
+   *
    * @param forceRollback
    */
   void close(boolean forceRollback);
 
   /**
    * 是否关闭
+   *
    * @return
    */
   boolean isClosed();
