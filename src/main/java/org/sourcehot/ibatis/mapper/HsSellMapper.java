@@ -1,8 +1,8 @@
-package com.sourcehot.ibatis.mapper;
+package org.sourcehot.ibatis.mapper;
 
 import java.util.List;
 
-import com.sourcehot.ibatis.entity.HsSell;
+import org.sourcehot.ibatis.entity.HsSell;
 import org.apache.ibatis.annotations.Param;
 
 public interface HsSellMapper {

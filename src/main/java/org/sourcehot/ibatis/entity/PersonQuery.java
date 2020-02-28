@@ -1,4 +1,4 @@
-package com.sourcehot.ibatis.entity;
+package org.sourcehot.ibatis.entity;
 
 public class PersonQuery {
   private String name;

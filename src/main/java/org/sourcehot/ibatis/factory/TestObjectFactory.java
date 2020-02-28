@@ -1,4 +1,4 @@
-package com.sourcehot.ibatis.factory;
+package org.sourcehot.ibatis.factory;
 
 import java.util.List;
 import java.util.Properties;

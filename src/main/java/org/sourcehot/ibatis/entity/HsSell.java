@@ -1,4 +1,4 @@
-package com.sourcehot.ibatis.entity;
+package org.sourcehot.ibatis.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;

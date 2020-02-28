@@ -1,11 +1,11 @@
-package com.sourcehot.ibatis;
+package org.sourcehot.ibatis;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import com.sourcehot.ibatis.entity.Person;
-import com.sourcehot.ibatis.mapper.PersonMapper;
+import org.sourcehot.ibatis.entity.Person;
+import org.sourcehot.ibatis.mapper.PersonMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

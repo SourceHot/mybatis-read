@@ -1,4 +1,4 @@
-package com.sourcehot.ibatis.plugins;
+package org.sourcehot.ibatis.plugins;
 
 import java.util.Properties;
 

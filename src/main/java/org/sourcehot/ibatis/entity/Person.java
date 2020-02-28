@@ -1,6 +1,6 @@
-package com.sourcehot.ibatis.entity;
+package org.sourcehot.ibatis.entity;
 
-public class PersonRes extends Object {
+public class Person extends Object {
   private int id;
 
   private String name;

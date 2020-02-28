@@ -1,4 +1,4 @@
-package com.sourcehot.ibatis.handler;
+package org.sourcehot.ibatis.handler;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
